@@ -1,0 +1,244 @@
+<svg viewBox="0 0 1200 720" xmlns="http://www.w3.org/2000/svg" role="img" style="background: #0f172a; border-radius: 12px;">
+  <title>ash4d.com Architecture — Private AI Platform on Multi-Cluster k3s</title>
+  <desc>Architecture diagram showing a home lab k3s cluster with AI/ML workloads connected to a GCP k3s cluster via Tailscale, managed by Fleet GitOps.</desc>
+
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="42" text-anchor="middle" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" letter-spacing="0.5">ash4d.com — Private AI Platform</text>
+  <text x="600" y="65" text-anchor="middle" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Multi-Cluster Kubernetes · Local LLM Inference · RAG · Agentic MCP Tooling · Fleet GitOps</text>
+
+  <!-- ========== HOME LAB CLUSTER ========== -->
+  <rect x="30" y="85" width="780" height="620" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="50" y="112" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="14" font-weight="700">HOME LAB — k3s v1.35 on openSUSE Leap 16.0</text>
+  <text x="680" y="112" fill="#64748b" font-family="system-ui, sans-serif" font-size="11">16 vCPU · 64 GB · 2× NVIDIA GPU</text>
+
+  <!-- AI Platform Section -->
+  <rect x="45" y="125" width="500" height="295" rx="8" fill="#1a2744" stroke="#2563eb" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="60" y="148" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="12" font-weight="600">AI PLATFORM</text>
+
+  <!-- Ollama -->
+  <rect x="60" y="160" width="145" height="70" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="132" y="185" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Ollama</text>
+  <text x="132" y="202" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Qwen3 27B</text>
+  <text x="132" y="218" text-anchor="middle" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="9" font-weight="600">V100 32GB</text>
+
+  <!-- Open WebUI -->
+  <rect x="220" y="160" width="145" height="70" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="292" y="185" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Open WebUI</text>
+  <text x="292" y="202" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Chat + Pipelines</text>
+  <text x="292" y="218" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">+ Redis</text>
+
+  <!-- Milvus -->
+  <rect x="380" y="160" width="150" height="70" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="455" y="185" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Milvus</text>
+  <text x="455" y="202" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Vector DB + etcd</text>
+  <text x="455" y="218" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">+ MinIO (150 Gi)</text>
+
+  <!-- MCP Servers row -->
+  <rect x="60" y="245" width="105" height="55" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="112" y="268" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="600">k8s MCP</text>
+  <text x="112" y="283" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Read-only</text>
+
+  <rect x="175" y="245" width="105" height="55" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="227" y="268" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="600">GitHub MCP</text>
+  <text x="227" y="283" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Repo access</text>
+
+  <rect x="290" y="245" width="105" height="55" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="342" y="268" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="600">mcpo</text>
+  <text x="342" y="283" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">MCP→OpenAPI</text>
+
+  <rect x="405" y="245" width="125" height="55" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="467" y="268" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Docs Indexer</text>
+  <text x="467" y="283" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Weekly CronJob</text>
+
+  <!-- ComfyUI -->
+  <rect x="60" y="315" width="225" height="50" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="172" y="338" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="12" font-weight="600">ComfyUI — Stable Diffusion</text>
+  <text x="172" y="353" text-anchor="middle" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="9" font-weight="600">GTX 1070 8GB · 150 Gi</text>
+
+  <!-- RAG label -->
+  <rect x="300" y="315" width="230" height="50" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="415" y="335" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="11" font-weight="600">RAG Pipeline</text>
+  <text x="415" y="350" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">nomic-embed-text → Milvus → Qwen3</text>
+
+  <!-- Connection arrows in AI section -->
+  <line x1="205" y1="195" x2="220" y2="195" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="365" y1="195" x2="380" y2="195" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.6"/>
+  <line x1="292" y1="230" x2="292" y2="245" stroke="#3b82f6" stroke-width="1" stroke-opacity="0.6"/>
+
+  <!-- Infrastructure Section -->
+  <rect x="45" y="430" width="500" height="130" rx="8" fill="#1a2e2a" stroke="#059669" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="60" y="453" fill="#34d399" font-family="system-ui, sans-serif" font-size="12" font-weight="600">INFRASTRUCTURE</text>
+
+  <rect x="60" y="465" width="90" height="45" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="105" y="485" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Longhorn</text>
+  <text x="105" y="498" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">~500 Gi CSI</text>
+
+  <rect x="160" y="465" width="90" height="45" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="205" y="485" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">MetalLB</text>
+  <text x="205" y="498" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">L2/BGP LB</text>
+
+  <rect x="260" y="465" width="90" height="45" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="305" y="485" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Traefik</text>
+  <text x="305" y="498" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Ingress</text>
+
+  <rect x="360" y="465" width="90" height="45" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="405" y="485" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">cert-mgr</text>
+  <text x="405" y="498" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">TLS/LE</text>
+
+  <rect x="60" y="520" width="90" height="30" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="105" y="540" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">NVIDIA DP</text>
+
+  <rect x="160" y="520" width="90" height="30" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="205" y="540" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">DCGM</text>
+
+  <rect x="260" y="520" width="90" height="30" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="305" y="540" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">CoreDNS</text>
+
+  <rect x="360" y="520" width="90" height="30" rx="5" fill="#1e3a36" stroke="#059669" stroke-width="1"/>
+  <text x="405" y="540" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Flannel</text>
+
+  <!-- Observability Section -->
+  <rect x="560" y="125" width="237" height="145" rx="8" fill="#1a2a2e" stroke="#0891b2" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="575" y="148" fill="#22d3ee" font-family="system-ui, sans-serif" font-size="12" font-weight="600">OBSERVABILITY</text>
+
+  <rect x="575" y="160" width="100" height="45" rx="5" fill="#1e3540" stroke="#0891b2" stroke-width="1"/>
+  <text x="625" y="180" text-anchor="middle" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Prometheus</text>
+  <text x="625" y="193" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">50 Gi retention</text>
+
+  <rect x="685" y="160" width="100" height="45" rx="5" fill="#1e3540" stroke="#0891b2" stroke-width="1"/>
+  <text x="735" y="180" text-anchor="middle" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Grafana</text>
+  <text x="735" y="193" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Dashboards</text>
+
+  <rect x="575" y="215" width="100" height="40" rx="5" fill="#1e3540" stroke="#0891b2" stroke-width="1"/>
+  <text x="625" y="240" text-anchor="middle" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Alertmanager</text>
+
+  <rect x="685" y="215" width="100" height="40" rx="5" fill="#1e3540" stroke="#0891b2" stroke-width="1"/>
+  <text x="735" y="240" text-anchor="middle" fill="#67e8f9" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Node Exporter</text>
+
+  <!-- Fleet Controller -->
+  <rect x="560" y="285" width="237" height="75" rx="8" fill="#1a2e1e" stroke="#16a34a" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="575" y="308" fill="#4ade80" font-family="system-ui, sans-serif" font-size="12" font-weight="600">FLEET CONTROLLER</text>
+  <text x="575" y="325" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">GitOps — watches GitHub repos</text>
+  <text x="575" y="340" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Deploys Bundles to downstream</text>
+
+  <!-- Applications -->
+  <rect x="560" y="375" width="237" height="85" rx="8" fill="#2a1e3a" stroke="#8b5cf6" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="575" y="398" fill="#a78bfa" font-family="system-ui, sans-serif" font-size="12" font-weight="600">APPLICATIONS</text>
+
+  <rect x="575" y="410" width="65" height="35" rx="4" fill="#2d1f4e" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="607" y="432" text-anchor="middle" fill="#c4b5fd" font-family="system-ui, sans-serif" font-size="9" font-weight="600">Node-RED</text>
+
+  <rect x="648" y="410" width="55" height="35" rx="4" fill="#2d1f4e" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="675" y="432" text-anchor="middle" fill="#c4b5fd" font-family="system-ui, sans-serif" font-size="9" font-weight="600">Emby</text>
+
+  <rect x="711" y="410" width="75" height="35" rx="4" fill="#2d1f4e" stroke="#8b5cf6" stroke-width="1"/>
+  <text x="748" y="432" text-anchor="middle" fill="#c4b5fd" font-family="system-ui, sans-serif" font-size="9" font-weight="600">Resilio Sync</text>
+
+  <!-- GPU Bar -->
+  <rect x="45" y="575" width="500" height="55" rx="8" fill="#2a1e0e" stroke="#d97706" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="60" y="598" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="12" font-weight="600">GPU COMPUTE</text>
+
+  <rect x="60" y="608" width="210" height="16" rx="3" fill="#92400e"/>
+  <text x="165" y="620" text-anchor="middle" fill="#fde68a" font-family="system-ui, sans-serif" font-size="9" font-weight="600">Tesla V100 32GB → Ollama/Qwen3</text>
+
+  <rect x="280" y="608" width="210" height="16" rx="3" fill="#92400e"/>
+  <text x="385" y="620" text-anchor="middle" fill="#fde68a" font-family="system-ui, sans-serif" font-size="9" font-weight="600">GTX 1070 8GB → ComfyUI/StableDiff</text>
+
+  <!-- Storage Bar -->
+  <rect x="45" y="640" width="500" height="55" rx="8" fill="#1e2a1e" stroke="#059669" stroke-width="1" stroke-opacity="0.3"/>
+  <text x="60" y="663" fill="#34d399" font-family="system-ui, sans-serif" font-size="12" font-weight="600">PERSISTENT STORAGE — Longhorn CSI</text>
+
+  <rect x="60" y="673" width="100" height="14" rx="2" fill="#065f46"/>
+  <text x="110" y="684" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="8">Ollama 100Gi</text>
+
+  <rect x="165" y="673" width="75" height="14" rx="2" fill="#065f46"/>
+  <text x="202" y="684" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="8">Milvus 100Gi</text>
+
+  <rect x="245" y="673" width="75" height="14" rx="2" fill="#065f46"/>
+  <text x="282" y="684" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="8">ComfyUI 150Gi</text>
+
+  <rect x="325" y="673" width="60" height="14" rx="2" fill="#065f46"/>
+  <text x="355" y="684" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="8">Prom 50Gi</text>
+
+  <rect x="390" y="673" width="50" height="14" rx="2" fill="#065f46"/>
+  <text x="415" y="684" text-anchor="middle" fill="#6ee7b7" font-family="system-ui, sans-serif" font-size="9">+48Gi</text>
+
+  <text x="455" y="684" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">≈ 500 Gi total</text>
+
+  <!-- ========== TAILSCALE TUNNEL ========== -->
+  <line x1="820" y1="330" x2="860" y2="330" stroke="#06b6d4" stroke-width="2" stroke-dasharray="6,3" filter="url(#glow)"/>
+  <line x1="860" y1="330" x2="930" y2="330" stroke="#06b6d4" stroke-width="2" stroke-dasharray="6,3" filter="url(#glow)"/>
+
+  <rect x="835" y="300" width="120" height="22" rx="4" fill="#164e63" stroke="#06b6d4" stroke-width="1"/>
+  <text x="895" y="315" text-anchor="middle" fill="#22d3ee" font-family="system-ui, sans-serif" font-size="10" font-weight="600">Tailscale Mesh</text>
+
+  <!-- ========== GCP CLUSTER ========== -->
+  <rect x="930" y="85" width="245" height="360" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="950" y="112" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="14" font-weight="700">GCP — us-central1</text>
+  <text x="950" y="128" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">e2-small · 2 vCPU · 2 GB</text>
+
+  <!-- GCP k3s -->
+  <rect x="945" y="140" width="215" height="80" rx="6" fill="#1a2744" stroke="#2563eb" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="960" y="163" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="11" font-weight="600">k3s (downstream)</text>
+
+  <rect x="960" y="175" width="90" height="35" rx="4" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="1005" y="197" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="10" font-weight="600">nginx</text>
+
+  <rect x="1060" y="175" width="90" height="35" rx="4" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+  <text x="1105" y="197" text-anchor="middle" fill="#93c5fd" font-family="system-ui, sans-serif" font-size="10" font-weight="600">cert-mgr</text>
+
+  <!-- Fleet Agent -->
+  <rect x="945" y="235" width="215" height="55" rx="6" fill="#1a2e1e" stroke="#16a34a" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="960" y="258" fill="#4ade80" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Fleet Agent</text>
+  <text x="960" y="275" fill="#64748b" font-family="system-ui, sans-serif" font-size="9">Receives Bundles from controller</text>
+
+  <!-- ash4d.com label -->
+  <rect x="945" y="310" width="215" height="50" rx="6" fill="#0f172a" stroke="#f59e0b" stroke-width="1.5"/>
+  <text x="1052" y="335" text-anchor="middle" fill="#fbbf24" font-family="system-ui, sans-serif" font-size="14" font-weight="700">ash4d.com</text>
+  <text x="1052" y="350" text-anchor="middle" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Hugo static site · HTTPS</text>
+
+  <!-- DNS label -->
+  <rect x="945" y="375" width="215" height="40" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="960" y="395" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">DNS: Dyn.com → GCP static IP</text>
+  <text x="960" y="408" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="10">TLS: Let's Encrypt (HTTP-01)</text>
+
+  <!-- ========== GITHUB ========== -->
+  <rect x="930" y="470" width="245" height="75" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="950" y="497" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="13" font-weight="700">GitHub</text>
+  <text x="950" y="515" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">darthzen/ash4d.com</text>
+  <text x="950" y="530" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">Push → Actions → Fleet → Deploy</text>
+
+  <!-- GitHub to Fleet arrow -->
+  <line x1="930" y1="507" x2="797" y2="330" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4,3" stroke-opacity="0.7"/>
+  <polygon points="800,327 797,335 790,327" fill="#4ade80" fill-opacity="0.7"/>
+
+  <!-- Fleet to GCP arrow -->
+  <line x1="797" y1="322" x2="930" y2="260" stroke="#4ade80" stroke-width="1.5" stroke-opacity="0.7"/>
+  <polygon points="927,262 935,260 930,267" fill="#4ade80" fill-opacity="0.7"/>
+
+  <!-- Internet users arrow -->
+  <rect x="1020" y="600" width="100" height="35" rx="17" fill="#334155" stroke="#64748b" stroke-width="1"/>
+  <text x="1070" y="622" text-anchor="middle" fill="#e2e8f0" font-family="system-ui, sans-serif" font-size="11" font-weight="600">Users</text>
+
+  <line x1="1070" y1="600" x2="1052" y2="365" stroke="#f59e0b" stroke-width="1.5" stroke-opacity="0.6"/>
+  <polygon points="1049,368 1055,368 1052,360" fill="#f59e0b" fill-opacity="0.7"/>
+  <text x="1090" y="580" fill="#f59e0b" font-family="system-ui, sans-serif" font-size="9" font-weight="600">HTTPS</text>
+
+  <!-- Claude Code box -->
+  <rect x="560" y="500" width="237" height="60" rx="8" fill="#2a1e3a" stroke="#a855f7" stroke-width="1" stroke-opacity="0.5"/>
+  <text x="575" y="523" fill="#c084fc" font-family="system-ui, sans-serif" font-size="12" font-weight="600">Claude Code (Mac)</text>
+  <text x="575" y="540" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">MCP → k8s, GitHub, Ollama tools</text>
+
+  <!-- Claude to MCP arrow -->
+  <line x1="620" y1="500" x2="400" y2="300" stroke="#a855f7" stroke-width="1" stroke-dasharray="4,3" stroke-opacity="0.5"/>
+
+  <!-- Stats footer -->
+  <text x="60" y="710" fill="#475569" font-family="system-ui, sans-serif" font-size="10">60+ pods · 12 namespaces · Longhorn CSI · MetalLB L2 · Rancher Monitoring · SUSE Fleet GitOps</text>
+</svg>
