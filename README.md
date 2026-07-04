@@ -361,6 +361,9 @@ ash4d.com/
 │   ├── ai-platform.md           # AI/ML platform details
 │   ├── infrastructure.md        # Infrastructure layer documentation
 │   └── deployment-plan.md       # GCP deployment plan
+├── lab/                         # git submodule → lab-fleet: cluster configs
+│   ├── 00-host/ … 14-cluster-mgmt/  (install-ordered, one dir per component)
+│   └── README.md                # recreation runbook
 ├── site/                        # Hugo source (future)
 │   ├── config.toml
 │   ├── content/
@@ -379,7 +382,7 @@ ash4d.com/
 ## Related Repositories
 
 - [`ollama-code-mcp`](https://github.com/darthzen/ollama-code-mcp) — MCP server that delegates coding tasks from Claude Code to local Ollama/Qwen3, with file-aware tools and batch refactoring
-- [`lab-fleet`](https://github.com/darthzen/lab-fleet) — Fleet GitRepo configurations for the home lab cluster
+- [`lab-fleet`](https://github.com/darthzen/lab-fleet) — Complete home-lab cluster configuration (helm values, manifests, recovered service sources), mounted here as the `lab/` submodule and curated from live cluster state
 - [`k8s-demos`](https://github.com/darthzen/k8s-demos) — Kubernetes demonstration materials including NeuVector container security
 
 ## Tech Stack Summary
