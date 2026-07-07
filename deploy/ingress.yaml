@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: site
+  namespace: ash4d
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [ash4d.com, www.ash4d.com]
+      secretName: ash4d-wildcard-tls
+  rules:
+    - host: ash4d.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: site
+                port:
+                  number: 80
+    - host: www.ash4d.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: site
+                port:
+                  number: 80
