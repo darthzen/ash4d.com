@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: ghcr.io/darthzen/ash4d:8f5c136
+          image: ghcr.io/darthzen/ash4d:99d0cc2
           ports:
             - containerPort: 8080
           resources:
