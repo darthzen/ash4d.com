@@ -1,0 +1,7 @@
+# Carried in the bundle so it does not depend on the retired `lab-ash4d-origin`
+# bundle having created it. Fleet is not given `defaultNamespace`, so it would not
+# create this on its own.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ash4d-origin

@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: site
-  namespace: ash4d
+  name: origin
+  namespace: ash4d-origin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: site
+      app: origin
   template:
     metadata:
       labels:
-        app: site
+        app: origin
     spec:
       containers:
         - name: nginx
+          # Pinned by CI on every push to site/** — do not edit by hand.
           image: ghcr.io/darthzen/ash4d:ce13c47
           ports:
             - containerPort: 8080

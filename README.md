@@ -1,6 +1,6 @@
 # ash4d.com — Private AI Platform & Multi-Cluster Kubernetes Infrastructure
 
-A production-grade private AI platform running on a single-node k3s cluster, featuring local LLM inference (Qwen3 27B on a Tesla V100), RAG over a Milvus vector database, agentic MCP tooling, GPU-accelerated image generation, and full observability with Prometheus/Grafana. A second k3s cluster on GCP serves the public-facing site, managed as a downstream cluster via SUSE Fleet over a Tailscale mesh.
+A production-grade private AI platform running on a single-node k3s cluster, featuring local LLM inference (Qwen3 27B on a Tesla V100), RAG over a Milvus vector database, agentic MCP tooling, GPU-accelerated image generation, and full observability with Prometheus/Grafana. The public site is hosted on this cluster and managed by SUSE Fleet; a second k3s cluster on GCP fronts it as a caching reverse proxy, reaching the origin across a Tailscale mesh.
 
 This repository documents the architecture, design decisions, and deployment patterns behind the platform.
 
@@ -299,31 +299,32 @@ flowchart TD
         MESH{{Tailscale Mesh<br/>Encrypted P2P}}
     end
 
-    subgraph GCP["GCP k3s (Downstream)"]
-        FA[Fleet Agent]
-        SITE[ash4d.com<br/>nginx + Hugo]
+    subgraph GCP["GCP k3s (Caching Edge)"]
+        PROXY[nginx cache-proxy<br/>TLS + proxy_cache]
     end
+
+    ORIGIN[ash4d-origin/origin<br/>nginx + static site]
 
     REPO -->|poll| GITREPO
     GITREPO --> FC
     FC -->|build| BUNDLE
-    BUNDLE -->|deploy via| MESH
-    MESH --> FA
-    FA -->|apply| SITE
+    BUNDLE -->|apply| ORIGIN
+    PROXY -->|Host: origin.ash4d.com| MESH
+    MESH --> ORIGIN
 
     classDef fleet fill:#059669,stroke:#047857,color:#fff
-    class FC,GITREPO,BUNDLE,FA fleet
+    class FC,GITREPO,BUNDLE fleet
 ```
 
-**SUSE Fleet** runs on the home cluster as both controller and local agent. The GCP cluster registers as a downstream cluster, with the Fleet agent connecting outbound to the controller over the Tailscale tunnel.
+**SUSE Fleet** runs on the home cluster as both controller and local agent, and the site is one of the workloads it manages there. Public traffic terminates at the GCP edge, which caches responses and fetches misses from the origin across the Tailscale mesh — so the edge holds no site content of its own and a rollout on the origin is invisible to cached readers.
 
 The deployment pipeline is fully GitOps:
 
 1. Push site changes to `darthzen/ash4d.com` on GitHub
-2. GitHub Actions builds the Hugo site and container image
-3. Fleet detects the updated manifests in `deploy/`
-4. Fleet bundles the changes and pushes them to the GCP downstream cluster
-5. The site rolls with zero manual intervention
+2. GitHub Actions builds the container image and pins the new tag in `deploy/deployment.yaml`
+3. Fleet detects the updated manifest and rebuilds the bundle
+4. Fleet applies it to the `ash4d-origin` namespace on the home cluster
+5. The site rolls with zero manual intervention; the edge picks up the change as its cache expires
 
 ### Tailscale Mesh
 
@@ -364,16 +365,16 @@ ash4d.com/
 ├── lab/                         # git submodule → lab-fleet: cluster configs
 │   ├── 00-host/ … 14-cluster-mgmt/  (install-ordered, one dir per component)
 │   └── README.md                # recreation runbook
-├── site/                        # Hugo source (future)
-│   ├── config.toml
-│   ├── content/
-│   └── themes/
+├── site/                        # the site itself, baked into the image
+│   ├── index.html
+│   ├── style.css
+│   └── img/
 ├── deploy/                      # Kubernetes manifests (Fleet-managed)
+│   ├── fleet.yaml               # bundle options (takeOwnership)
 │   ├── namespace.yaml
-│   ├── deployment.yaml
+│   ├── deployment.yaml          # image tag pinned here by CI
 │   ├── service.yaml
-│   ├── ingress.yaml
-│   └── certificate.yaml
+│   └── ingress.yaml
 ├── Dockerfile
 └── .github/workflows/
     └── build-and-push.yaml

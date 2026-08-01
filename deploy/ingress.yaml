@@ -1,31 +1,20 @@
+# No TLS block on purpose: the GCP edge terminates TLS for ash4d.com and proxies
+# here over Tailscale as plain HTTP with `Host: origin.ash4d.com`.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: site
-  namespace: ash4d
+  name: origin
+  namespace: ash4d-origin
 spec:
-  ingressClassName: nginx
-  tls:
-    - hosts: [ash4d.com, www.ash4d.com]
-      secretName: ash4d-wildcard-tls
+  ingressClassName: traefik
   rules:
-    - host: ash4d.com
+    - host: origin.ash4d.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: site
-                port:
-                  number: 80
-    - host: www.ash4d.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: site
+                name: origin
                 port:
                   number: 80
