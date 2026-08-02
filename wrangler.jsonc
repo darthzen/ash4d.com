@@ -1,0 +1,36 @@
+{
+	// Near-static Worker. `src/index.js` exists only to map `/` to index.html,
+	// which `html_handling: "none"` otherwise leaves unresolved — see the
+	// comment in that file. Everything else is served straight from ./site.
+	"name": "ash4d-com",
+	"compatibility_date": "2026-08-02",
+	"main": "./src/index.js",
+
+	"assets": {
+		"directory": "./site",
+		"binding": "ASSETS",
+
+		// Serve `/fossa-mcp.html` at that exact path, matching what the origin
+		// does today. The default ("auto-trailing-slash") 307s .html URLs to
+		// their extensionless form, which would change every published URL on
+		// the site at cutover — and a 307 is temporary, so search engines keep
+		// the .html form canonical while the content answers elsewhere.
+		"html_handling": "none"
+
+		// No `not_found_handling` set: unmatched paths return a bare 404.
+		// Add site/404.html and "not_found_handling": "404-page" to customise.
+	},
+
+	// Custom domains create and own the DNS records for these hostnames.
+	// Both hostnames were proxied CNAMEs to the tunnel; attaching these
+	// overrides those records — see docs/cloudflare-migration.md, step 3.
+	// Rollback targets are recorded in that step's table.
+	"routes": [
+		{ "pattern": "ash4d.com", "custom_domain": true },
+		{ "pattern": "www.ash4d.com", "custom_domain": true }
+	],
+
+	"observability": {
+		"enabled": true
+	}
+}
