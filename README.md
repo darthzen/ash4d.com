@@ -1,6 +1,6 @@
-# ash4d.com — Private AI Platform & Multi-Cluster Kubernetes Infrastructure
+# ash4d.com — Private AI Platform & Kubernetes Infrastructure
 
-A production-grade private AI platform running on a single-node k3s cluster, featuring local LLM inference (Qwen3 27B on a Tesla V100), RAG over a Milvus vector database, agentic MCP tooling, GPU-accelerated image generation, and full observability with Prometheus/Grafana. The public site is hosted on this cluster and managed by SUSE Fleet; a second k3s cluster on GCP fronts it as a caching reverse proxy, reaching the origin across a Tailscale mesh.
+A production-grade private AI platform running on a single-node k3s cluster, featuring local LLM inference (Qwen3 27B on a Tesla V100), RAG over a Milvus vector database, agentic MCP tooling, GPU-accelerated image generation, and full observability with Prometheus/Grafana. The public site is served from Cloudflare Workers static assets, deployed by GitHub Actions; a Cloudflare Tunnel exposes the lab-hosted services that need a public hostname.
 
 This repository documents the architecture, design decisions, and deployment patterns behind the platform.
 
@@ -13,15 +13,9 @@ graph TB
         GH[GitHub]
     end
 
-    subgraph GCP["GCP — us-central1 (e2-small)"]
-        subgraph gcp_k3s["k3s (downstream)"]
-            NGINX[nginx — ash4d.com]
-            CM2[cert-manager]
-        end
-    end
-
-    subgraph Tailscale["Tailscale Mesh"]
-        TS_TUNNEL{{encrypted tunnel}}
+    subgraph CF["Cloudflare"]
+        WORKER[Workers Static Assets<br/>ash4d.com + www]
+        CFTUNNEL{{Cloudflare Tunnel}}
     end
 
     subgraph HomeLab["Home Lab — openSUSE Leap 16.0"]
@@ -66,12 +60,12 @@ graph TB
         GTX[GTX 1070 8GB]
     end
 
-    USER -->|HTTPS| NGINX
+    USER -->|HTTPS| WORKER
+    USER -->|HTTPS| CFTUNNEL
     USER -->|LAN| OWUI
+    GH -->|Actions + wrangler| WORKER
     GH -->|GitOps| FLEET
-    FLEET -->|Bundle deploy| gcp_k3s
-    TS_TUNNEL --- gcp_k3s
-    TS_TUNNEL --- k3s
+    CFTUNNEL --- TRAEFIK
 
     OLLAMA ---|GPU pinned| V100
     COMFY ---|GPU pinned| GTX
@@ -89,14 +83,14 @@ graph TB
     classDef infra fill:#6b7280,stroke:#4b5563,color:#fff
     classDef mon fill:#10b981,stroke:#059669,color:#fff
     classDef app fill:#8b5cf6,stroke:#7c3aed,color:#fff
-    classDef gcp fill:#4285f4,stroke:#1a73e8,color:#fff
+    classDef cf fill:#f6821f,stroke:#d96b0f,color:#fff
 
     class V100,GTX gpu
     class OLLAMA,OWUI,MILVUS,MCPO,K8S_MCP,GH_MCP,INDEXER,ATTU,COMFY ai
     class FLEET,LONGHORN,METALLB,TRAEFIK,CERTMGR,NVIDIA infra
     class PROM,GRAFANA,ALERT mon
     class NODERED,EMBY,RESILIO,HERMES app
-    class NGINX,CM2 gcp
+    class WORKER,CFTUNNEL cf
 ```
 
 ## Platform Specifications
@@ -279,56 +273,88 @@ The **NVIDIA Device Plugin** exposes both GPUs as schedulable resources (`nvidia
 
 **DCGM Exporter** (DaemonSet) scrapes GPU telemetry (utilization, temperature, memory, power draw) and exposes it as Prometheus metrics, feeding into Grafana dashboards for real-time GPU monitoring.
 
-## Multi-Cluster Management
+## Public Serving and GitOps
 
-### SUSE Fleet — GitOps at Scale
+### The site — Cloudflare Workers
 
 ```mermaid
 flowchart TD
     subgraph GitHub
-        REPO[("darthzen/ash4d.com<br/>deploy/ manifests")]
+        REPO[("darthzen/ash4d.com<br/>site/ assets")]
+        GHA[GitHub Actions<br/>wrangler deploy]
     end
 
-    subgraph HomeLab["Home Lab k3s (Fleet Controller)"]
-        FC[Fleet Controller]
+    subgraph Cloudflare
+        WORKER[Workers Static Assets]
+        DNS[("ash4d.com + www<br/>custom domains")]
+        RR[Redirect Rule<br/>www → apex 301]
+    end
+
+    USER((Users))
+
+    REPO -->|push to main, site/**| GHA
+    GHA -->|deploy| WORKER
+    DNS --> WORKER
+    USER --> RR
+    RR --> WORKER
+    USER --> WORKER
+
+    classDef cf fill:#f6821f,stroke:#d96b0f,color:#fff
+    class WORKER,DNS,RR cf
+```
+
+The public site has no home-lab dependency in its serving path. Assets live in
+`site/`, a push to `main` touching them triggers `wrangler deploy`, and
+Cloudflare serves them from its edge. Apex and `www` are Worker custom domains;
+a zone Redirect Rule 301s `www` to the apex so one canonical hostname answers.
+
+`html_handling` is set to `none` so `/fossa-mcp.html` keeps serving at its own
+URL. The ten-line `src/index.js` exists only to map `/` to `/index.html`, which
+that setting otherwise leaves unresolved.
+
+The site previously ran as an nginx pod on the home cluster, fronted by a k3s
+caching proxy on GCP and reached across a Tailscale mesh. That path was retired
+in August 2026 — see `docs/cloudflare-migration.md` for the runbook and the
+reasoning.
+
+### SUSE Fleet — GitOps for the cluster
+
+```mermaid
+flowchart TD
+    subgraph GitHub
+        LABREPO[("darthzen/lab-fleet<br/>bundle manifests")]
+    end
+
+    subgraph Rancher["Rancher / Fleet Controller"]
         GITREPO[GitRepo CR]
         BUNDLE[Bundle]
     end
 
-    subgraph Tailscale
-        MESH{{Tailscale Mesh<br/>Encrypted P2P}}
+    subgraph HomeLab["Home Lab k3s"]
+        AGENT[Fleet Agent]
+        WORKLOADS[Namespaced workloads]
     end
 
-    subgraph GCP["GCP k3s (Caching Edge)"]
-        PROXY[nginx cache-proxy<br/>TLS + proxy_cache]
-    end
-
-    ORIGIN[ash4d-origin/origin<br/>nginx + static site]
-
-    REPO -->|poll| GITREPO
-    GITREPO --> FC
-    FC -->|build| BUNDLE
-    BUNDLE -->|apply| ORIGIN
-    PROXY -->|Host: origin.ash4d.com| MESH
-    MESH --> ORIGIN
+    LABREPO -->|poll 60s| GITREPO
+    GITREPO --> BUNDLE
+    BUNDLE -->|deploy| AGENT
+    AGENT -->|apply| WORKLOADS
 
     classDef fleet fill:#059669,stroke:#047857,color:#fff
-    class FC,GITREPO,BUNDLE fleet
+    class GITREPO,BUNDLE,AGENT fleet
 ```
 
-**SUSE Fleet** runs on the home cluster as both controller and local agent, and the site is one of the workloads it manages there. Public traffic terminates at the GCP edge, which caches responses and fetches misses from the origin across the Tailscale mesh — so the edge holds no site content of its own and a rollout on the origin is invisible to cached readers.
+**SUSE Fleet** manages the cluster's own workloads from `darthzen/lab-fleet`.
+Bundles run with `correctDrift` enabled, so an out-of-band `kubectl edit` is
+reverted on the next reconcile — the repo is the source of truth, and changing
+the cluster means changing the repo.
 
-The deployment pipeline is fully GitOps:
+### Cloudflare Tunnel
 
-1. Push site changes to `darthzen/ash4d.com` on GitHub
-2. GitHub Actions builds the container image and pins the new tag in `deploy/deployment.yaml`
-3. Fleet detects the updated manifest and rebuilds the bundle
-4. Fleet applies it to the `ash4d-origin` namespace on the home cluster
-5. The site rolls with zero manual intervention; the edge picks up the change as its cache expires
-
-### Tailscale Mesh
-
-Tailscale provides the connectivity layer between clusters — no VPN configuration, no port forwarding, no firewall holes. The GCP instance joins Rick's existing tailnet, and Fleet's agent communicates over the encrypted mesh. SSH access to the GCP instance also runs through Tailscale SSH.
+Lab-hosted services that need a public hostname reach the internet through a
+Cloudflare Tunnel rather than an inbound firewall hole. `buzz.ash4d.com` routes
+through Traefik; `ollama.ash4d.com` goes straight to its LoadBalancer VIP and
+sits behind Cloudflare Access. Everything else the tunnel receives gets a 404.
 
 ## Observability
 
@@ -361,7 +387,7 @@ ash4d.com/
 │   ├── architecture.md          # Deep-dive architecture documentation
 │   ├── ai-platform.md           # AI/ML platform details
 │   ├── infrastructure.md        # Infrastructure layer documentation
-│   └── deployment-plan.md       # GCP deployment plan
+│   └── cloudflare-migration.md  # Workers migration runbook
 ├── lab/                         # git submodule → lab-fleet: cluster configs
 │   ├── 00-host/ … 14-cluster-mgmt/  (install-ordered, one dir per component)
 │   └── README.md                # recreation runbook
@@ -369,15 +395,12 @@ ash4d.com/
 │   ├── index.html
 │   ├── style.css
 │   └── img/
-├── deploy/                      # Kubernetes manifests (Fleet-managed)
-│   ├── fleet.yaml               # bundle options (takeOwnership)
-│   ├── namespace.yaml
-│   ├── deployment.yaml          # image tag pinned here by CI
-│   ├── service.yaml
-│   └── ingress.yaml
-├── Dockerfile
+│   └── _headers                 # security headers + cache policy
+├── src/
+│   └── index.js                 # maps / to /index.html
+├── wrangler.jsonc               # Worker config, custom domains
 └── .github/workflows/
-    └── build-and-push.yaml
+    └── deploy-worker.yaml       # push to main + site/** -> wrangler deploy
 ```
 
 ## Related Repositories
@@ -391,8 +414,8 @@ ash4d.com/
 | Layer | Technology |
 |---|---|
 | **OS** | openSUSE Leap 16.0 |
-| **Orchestration** | k3s v1.35 (home), k3s (GCP) |
-| **Multi-Cluster** | SUSE Fleet (GitOps) |
+| **Orchestration** | k3s v1.35 |
+| **GitOps** | SUSE Fleet (cluster), GitHub Actions + wrangler (site) |
 | **LLM Inference** | Ollama + Qwen3 27B |
 | **Vector Database** | Milvus (standalone) + etcd + MinIO |
 | **Embeddings** | nomic-embed-text |

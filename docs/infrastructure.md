@@ -142,7 +142,9 @@ The full Rancher Monitoring stack (based on kube-prometheus-stack) provides prod
 
 ## Fleet Agent
 
-The **Fleet agent** connects this cluster to the Fleet controller for GitOps-based deployment management. See the [multi-cluster architecture](../README.md#multi-cluster-management) section for details on how Fleet manages both the home lab and the GCP downstream cluster.
+The **Fleet agent** connects this cluster to the Fleet controller for GitOps-based deployment management. See the [Public Serving and GitOps](../README.md#public-serving-and-gitops) section for how Fleet manages the cluster's workloads from `darthzen/lab-fleet`, with `correctDrift` enabled so the repo stays the source of truth.
+
+The public site is **not** among those workloads. It moved to Cloudflare Workers in August 2026 and no longer runs on this cluster — see `cloudflare-migration.md`.
 
 ## Other Workloads
 
