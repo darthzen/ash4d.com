@@ -185,8 +185,9 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 /* ---------- defenses-miss panel ---------- */
 #misses .card { display: flex; flex-direction: column; }
 #misses .kicker { color: var(--amber); font-size: 12px; }
+/* padding/margin tightened from 17/14 to fit a fourth row in the fixed 644x445 card */
 .miss { background: var(--navy); border: 1px solid var(--line); border-radius: 12px;
-  padding: 17px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  padding: 13px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
 .to-door { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line);
   display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
 .to-door p { font-family: var(--f-mono); font-size: 12px; letter-spacing: .04em;
@@ -557,18 +558,21 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
       <p class="kicker">// Why Current Defenses Miss</p>
       <div class="miss rv d1">
         <div class="ic"><img src="assets/server.svg" alt=""></div>
-        <div class="tx"><p>Traditional security tools weren&rsquo;t built for Kubernetes &mdash; and the platform moves fast enough that what worked last year may quietly not work now.</p></div>
+        <div class="tx"><p>Your perimeter tools watch the front door. Kubernetes traffic moves pod-to-pod behind it &mdash; the dashboard reads green while an intruder moves room to room.</p></div>
       </div>
       <div class="miss rv d2">
-        <div class="ic"><img src="assets/alert-triangle.svg" alt=""></div>
-        <div class="tx"><p>1 in 4 exploited CVEs are attacked on or before disclosure day &mdash; a patch can&rsquo;t reach those at all.</p>
-        <p class="src">VulnCheck, 1H 2025</p></div>
+        <div class="ic"><img src="assets/calendar.svg" alt=""></div>
+        <div class="tx"><p>A flawless patch program still loses the race: 1 in 4 exploited CVEs are hit on or before disclosure day.</p></div>
       </div>
       <div class="miss rv d3">
+        <div class="ic"><img src="assets/alert-triangle.svg" alt=""></div>
+        <div class="tx"><p>Detection-only tools turn every attack into homework: the alert fires, and the intruder keeps moving while your team investigates.</p></div>
+      </div>
+      <div class="miss rv d4">
         <div class="ic"><img src="assets/eye.svg" alt=""></div>
         <div class="tx"><p>Most runtime &ldquo;blocking&rdquo; is observation underneath. It can tell you exactly what was taken &mdash; once it&rsquo;s gone.</p></div>
       </div>
-      <div class="to-door rv d4">
+      <div class="to-door rv d5">
         <p>Which begs the question&hellip;</p>
         <img src="assets/arrow-right.svg" alt="">
       </div>
