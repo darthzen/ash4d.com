@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>When, Not If — NeuVector GTM Pitch</title>
+<style>
+/* ---------- fonts (local, no network) ---------- */
+@font-face { font-family: "SUSE"; font-weight: 100 900; font-style: normal;
+  src: url("fonts/SUSE-var.woff2") format("woff2"); }
+@font-face { font-family: "Montserrat"; font-weight: 100 900; font-style: normal;
+  src: url("fonts/Montserrat-var.woff2") format("woff2"); }
+@font-face { font-family: "Fira Code"; font-weight: 300 700; font-style: normal;
+  src: url("fonts/FiraCode-var.woff2") format("woff2"); }
+
+/* ---------- tokens (from Figma file 82qisnWbwFlXiuBcz1zaQu) ---------- */
+:root {
+  --navy: #06132d; --panel: #0b1d3f; --line: #192d54;
+  --ink: #f3f3f5; --ink2: #a7b2c8; --ink3: #5f6d8a;
+  --green: #30ba78; --green-hero: #2dd881; --green-deep: #289e6d; --green-bright: #37c98c;
+  --cyan: #0096e2; --amber: #c08414; --violet: #8a70f0; --red: #d13b4f;
+  --f-disp: "SUSE", "Avenir Next", system-ui, sans-serif;
+  --f-body: "Montserrat", "Avenir Next", system-ui, sans-serif;
+  --f-mono: "Fira Code", "SF Mono", ui-monospace, monospace;
+}
+
+html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
+  font-family: var(--f-body); overflow: hidden; height: 100%; }
+.fallback-message { display: none; }
+.impress-not-supported .fallback-message { display: block; padding: 2em; color: var(--ink); }
+.step { position: relative; box-sizing: border-box; }
+
+/* ---------- poster ground ---------- */
+#ground { width: 1400px; height: 2421px; background: var(--navy); border-radius: 28px; overflow: hidden; }
+#ground .glow { position: absolute; border-radius: 50%; filter: blur(90px); pointer-events: none; }
+#ground .glow.g1 { width: 700px; height: 700px; left: 60px;  top: 180px;  background: rgba(48,186,120,0.10); }
+#ground .glow.g2 { width: 600px; height: 600px; right: -80px; top: 900px;  background: rgba(0,150,226,0.07); }
+#ground .glow.g3 { width: 640px; height: 640px; left: 140px; bottom: 260px; background: rgba(48,186,120,0.06); }
+#ground .dotgrid { position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(167,178,200,0.14) 1.1px, transparent 1.1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 45% at 50% 42%, #000 0%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 45% at 50% 42%, #000 0%, transparent 100%); }
+#ground .crate { position: absolute; left: 716px; top: 1739px; width: 644px; height: 481px;
+  border-radius: 16px; border: 1px solid var(--line); overflow: hidden; }
+#ground .crate img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; }
+#ground .crate::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(6,19,45,0.35) 0%, rgba(6,19,45,0.05) 35%, rgba(6,19,45,0.82) 100%); }
+#ground .door-caption { position: absolute; left: 716px; top: 2064px; width: 644px; box-sizing: border-box;
+  padding: 0 28px 22px; z-index: 2; }
+#ground .door-caption .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--green-bright); margin: 0 0 6px; }
+#ground .door-caption .q { font-family: var(--f-disp); font-weight: 800; font-size: 21px; line-height: 1.25;
+  color: var(--ink); margin: 0; text-shadow: 0 2px 12px rgba(4,13,32,0.9); }
+
+/* ---------- shared card chrome ---------- */
+.card { box-sizing: border-box; height: 100%; width: 100%;
+  background: linear-gradient(180deg, var(--navy) 0%, rgba(6,19,45,0) 100%), var(--panel);
+  border: 1px solid var(--line); border-radius: 20px; padding: 32px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.25); position: relative; overflow: hidden; }
+.card .corner-glow { position: absolute; border-radius: 50%; filter: blur(40px); pointer-events: none; }
+.card .corner-glow.tr { width: 220px; height: 220px; right: -61px; top: -41px; background: rgba(48,186,120,0.10); }
+.card .corner-glow.bl { width: 180px; height: 180px; left: -41px; bottom: -61px; background: rgba(0,150,226,0.07); }
+.kicker { font-family: var(--f-disp); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink3); margin: 0 0 12px; }
+.icon-chip { background: var(--navy); border: 1px solid var(--line); border-radius: 12px;
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex: none; }
+.icon-chip img { width: 22px; height: 22px; display: block; }
+.src { font-family: var(--f-mono); font-size: 9px; color: var(--ink3); margin: 4px 0 0; }
+
+/* ---------- beat 0 — payoff hero ---------- */
+#beat-0 .card { padding: 48px; }
+.hero-stack { display: flex; gap: 40px; align-items: stretch; height: 445px; }
+.hero-left2 { flex: 1; min-width: 0; display: flex; align-items: center; padding-left: 32px; }
+.hero-title { font-family: var(--f-body); font-weight: 100; font-size: 63px;
+  line-height: 1.18; color: var(--ink2); margin: 0; }
+.hero-title .nv { font-family: var(--f-disp); font-weight: 800; font-size: 70px;
+  line-height: 1.15; color: #cc5500; }
+.hero-right3 { flex: 1; min-width: 0; position: relative; }
+/* lock: right edge flush with the contact box, vertically centered between card top and contact */
+.hero-img { position: absolute; left: 0; right: 32px; top: 12px; bottom: 152px;
+  display: flex; align-items: center; justify-content: flex-end; }
+.hero-img img { height: 100%; width: auto; opacity: 0.35; display: block; }
+.contact { position: absolute; right: 32px; bottom: 0; z-index: 1;
+  background: var(--navy); border: 1px solid var(--line); border-radius: 16px;
+  padding: 20px 28px; display: flex; gap: 18px; align-items: center; text-align: left; }
+.contact .who .n { font-weight: 600; font-size: 22px; color: var(--ink2); margin: 0; }
+.contact .who .e { font-weight: 400; font-size: 16px; color: var(--ink2); margin: 5px 0 0; }
+.contact img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex: none; }
+
+/* ---------- stakes panel ---------- */
+#stakes .kicker { color: var(--red); }
+.story-quote { background: rgba(209,59,79,0.08); border: 1px solid var(--red); border-radius: 16px;
+  padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 22px rgba(209,59,79,0.12); }
+.story-quote .q { font-family: var(--f-disp); font-weight: 800; font-size: 21px; line-height: 1.3;
+  color: var(--ink); margin: 0 0 8px; }
+.story-quote .a { font-size: 11px; color: var(--ink2); margin: 0; }
+.stakes-row { display: flex; gap: 20px; align-items: stretch; }
+.stat-tile { background: var(--navy); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
+.stat-tile .n { font-family: var(--f-disp); font-weight: 900; font-size: 44px; line-height: 1;
+  color: var(--red); margin: 0 0 6px; }
+.stat-tile .l { font-size: 11px; line-height: 1.35; color: var(--ink2); margin: 0; }
+.race { background: var(--navy); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  flex: 1.35; min-width: 0; }
+.race .h { font-family: var(--f-disp); font-weight: 800; font-size: 12px; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--amber); margin: 0 0 10px; }
+.race .row { margin-bottom: 8px; }
+.race .row .lbl { display: flex; justify-content: space-between; font-size: 10px; color: var(--ink2); margin-bottom: 3px; }
+.race .row .lbl .v { font-family: var(--f-mono); font-weight: 700; color: var(--ink); }
+.race .track { height: 12px; border-radius: 999px; background: rgba(6,19,45,0.5); border: 1px solid var(--line); overflow: hidden; }
+.race .track .fill { height: 100%; border-radius: 999px; width: 0; }
+.race .row.them .fill { background: var(--red); }
+.race .row.you .fill { background: var(--amber); }
+.race .cap { font-family: var(--f-disp); font-weight: 700; font-size: 12px; color: var(--ink); margin: 10px 0 0; }
+
+/* ---------- money leaks panel ---------- */
+#money .kicker { color: var(--green); }
+.leak-lede { font-size: 13px; color: var(--ink2); line-height: 1.35; margin: 0 0 11px; }
+.leak { background: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 8px 14px;
+  display: flex; gap: 12px; align-items: center; margin-bottom: 7px; }
+.leak .t { flex: 1; font-weight: 600; font-size: 12px; color: var(--ink); margin: 0; }
+.leak .blank { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); flex: none; }
+.leak .blank b { color: var(--green-bright); font-weight: 700; }
+
+/* ---------- hub ---------- */
+#spine .card { border: 1.5px solid var(--green); border-radius: 20px;
+  box-shadow: 0 14px 28px -12px rgba(0,0,0,0.25), 0 16px 32px rgba(48,186,120,0.08); }
+.hub-head { text-align: center; margin-bottom: 20px; }
+.hub-head .k { font-family: var(--f-disp); font-weight: 800; font-size: 12px; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--green); margin: 0 0 4px; }
+.hub-head .h { font-family: var(--f-disp); font-weight: 800; font-size: 24px; color: var(--ink); margin: 0 0 4px; }
+.hub-head .s { font-size: 14px; color: var(--ink2); margin: 0; }
+.stages { display: flex; gap: 32px; align-items: stretch; justify-content: center; }
+.stage { background: var(--navy); border: 2px solid; border-radius: 16px; padding: 20px;
+  width: 320px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; }
+.stage .hd { display: flex; align-items: center; justify-content: space-between; }
+.stage .hd .t { font-family: var(--f-disp); font-weight: 800; font-size: 14px; margin: 0; }
+.stage .hd .sq { width: 8px; height: 8px; border-radius: 4px; }
+.stage .icon-chip { border-width: 2px; }
+.stage .cap { font-weight: 600; font-size: 12px; color: var(--ink); margin: 0; }
+.stage.discover { border-color: var(--cyan); box-shadow: 0 10px 22px rgba(0,150,226,0.15), 0 12px 24px rgba(0,0,0,0.25); }
+.stage.discover .hd .t { color: var(--cyan); } .stage.discover .hd .sq { background: var(--cyan); }
+.stage.discover .icon-chip { border-color: var(--cyan); }
+.stage.monitor { border-color: var(--amber); box-shadow: 0 10px 22px rgba(192,132,20,0.15), 0 12px 24px rgba(0,0,0,0.25); }
+.stage.monitor .hd .t { color: var(--amber); } .stage.monitor .hd .sq { background: var(--amber); }
+.stage.monitor .icon-chip { border-color: var(--amber); }
+.stage.protect { border-color: var(--green); box-shadow: 0 10px 22px rgba(48,186,120,0.15), 0 12px 24px rgba(0,0,0,0.25); }
+.stage.protect .hd .t { color: var(--green); } .stage.protect .hd .sq { background: var(--green); }
+.stage.protect .icon-chip { border-color: var(--green); }
+.stage.protect .cap { color: var(--green); }
+.stage-arrow { width: 48px; display: flex; align-items: center; justify-content: center; align-self: center; }
+.stage-arrow img { width: 20px; height: 20px; }
+
+/* ---------- defenses-miss panel ---------- */
+#misses .card { display: flex; flex-direction: column; }
+#misses .kicker { color: var(--amber); font-size: 12px; }
+.miss { background: var(--navy); border: 1px solid var(--line); border-radius: 12px;
+  padding: 17px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+.to-door { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line);
+  display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+.to-door p { font-family: var(--f-mono); font-size: 12px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--green-bright); margin: 0; }
+.to-door img { width: 16px; height: 16px; }
+.miss .ic { background: var(--panel); border-radius: 10px; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center; flex: none; }
+.miss .ic img { width: 18px; height: 18px; }
+.miss .tx { flex: 1; min-width: 0; }
+.miss .tx p { font-weight: 600; font-size: 12px; line-height: 1.45; color: var(--ink); margin: 0; }
+
+/* ---------- the clock (nominal ending) ---------- */
+#b33 .card { background: var(--panel); border-radius: 16px; display: flex; align-items: center; }
+#b33 .kicker { color: var(--red); font-size: 12px; margin-bottom: 8px; }
+.clk-wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
+.clk-text { flex: 1; min-width: 0; }
+.clk-line { font-family: var(--f-disp); font-weight: 800; font-size: 30px; line-height: 1.15;
+  color: var(--ink); margin: 0; }
+.clock { display: flex; gap: 8px; align-items: center; flex: none; }
+.clock .grp { display: flex; gap: 4px; }
+.clock .cell { width: 42px; height: 62px; position: relative; perspective: 260px;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4)); }
+.clock .cell span { font-family: var(--f-mono); font-weight: 700; font-size: 34px; color: var(--red);
+  position: absolute; left: 0; width: 100%; height: 62px; line-height: 62px; text-align: center; }
+.clock .cell.hh span { color: #4a5568; }
+.clock .half { position: absolute; left: 0; right: 0; height: 50%; overflow: hidden; }
+.clock .half.top { top: 0; border-radius: 7px 7px 0 0;
+  background: linear-gradient(180deg, #d8dce2 0%, #c3c8d1 100%);
+  border-bottom: 1px solid rgba(4,13,32,0.55); box-sizing: border-box; }
+.clock .half.top span { top: 0; }
+.clock .half.bot { bottom: 0; border-radius: 0 0 7px 7px;
+  background: linear-gradient(180deg, #b4bac4 0%, #9aa1ac 100%); }
+.clock .half.bot span { top: -31px; }
+.clock .flap { position: absolute; top: 0; left: 0; right: 0; height: 50%;
+  transform-origin: bottom center; transform-style: preserve-3d; z-index: 2; }
+.clock .flap .face { position: absolute; inset: 0; overflow: hidden;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.clock .flap .face.front { border-radius: 7px 7px 0 0;
+  background: linear-gradient(180deg, #d8dce2 0%, #c3c8d1 100%);
+  border-bottom: 1px solid rgba(4,13,32,0.55); box-sizing: border-box; }
+.clock .flap .face.front span { top: 0; }
+.clock .flap .face.back { transform: rotateX(180deg); border-radius: 0 0 7px 7px;
+  background: linear-gradient(180deg, #b4bac4 0%, #9aa1ac 100%); }
+.clock .flap .face.back span { top: -31px; }
+.clock .cell.flip .flap { animation: flipdown 0.2s ease-in forwards; }
+@keyframes flipdown {
+  0%   { transform: rotateX(0deg); }
+  70%  { transform: rotateX(-180deg); }
+  82%  { transform: rotateX(-165deg); }
+  93%  { transform: rotateX(-177deg); }
+  100% { transform: rotateX(-180deg); }
+}
+/* card lighting: faces darken/lighten through the fall; card casts a shadow on the bottom half */
+.clock .flap .face::after { content: ""; position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+.clock .cell.flip .face.front::after { animation: shade-front 0.2s ease-in forwards; }
+.clock .cell.flip .face.back::after  { animation: shade-back 0.2s ease-in forwards; }
+@keyframes shade-front { 0% { opacity: 0; } 70% { opacity: 0.55; } 100% { opacity: 0.55; } }
+@keyframes shade-back  { 0% { opacity: 0.55; } 70% { opacity: 0.3; } 100% { opacity: 0; } }
+.clock .half.bot::before { content: ""; position: absolute; inset: 0; background: #000; opacity: 0;
+  pointer-events: none; z-index: 1; }
+.clock .cell.flip .half.bot::before { animation: cast-shadow 0.2s ease-in forwards; }
+@keyframes cast-shadow { 0% { opacity: 0; } 45% { opacity: 0.12; } 70% { opacity: 0.38; } 100% { opacity: 0; } }
+.clock .colon { font-family: var(--f-mono); font-weight: 700; font-size: 28px; color: var(--ink3); margin: 0; }
+.card .q13 { font-weight: 600; font-size: 13px; color: var(--ink); margin: 0 0 4px; }
+.card .fine { font-size: 11px; color: var(--ink2); line-height: 1.45; margin: 0; }
+.task-status { background: var(--navy); border-radius: 6px; padding: 8px; display: flex; gap: 8px;
+  align-items: flex-start; margin-top: 16px; }
+.task-status .bar { width: 4px; height: 16px; background: var(--green); flex: none; }
+.task-status span { font-family: var(--f-mono); font-size: 11px; color: var(--green); }
+
+/* ---------- demo track ---------- */
+#beat-4 .kicker { color: var(--violet); font-size: 13px; }
+.run-steps { display: flex; gap: 12px; margin: 16px 0 0; }
+.run-chip { background: var(--navy); border: 1px solid; border-radius: 12px; padding: 14px; flex: 1;
+  display: flex; flex-direction: column; gap: 10px; align-items: center;
+  filter: drop-shadow(0 10px 10px rgba(0,0,0,0.25)); }
+.run-chip .ic { background: var(--panel); border: 1px solid; border-radius: 12px; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center; }
+.run-chip .ic img { width: 18px; height: 18px; }
+.run-chip .t { font-family: var(--f-mono); font-weight: 700; font-size: 11px; color: var(--ink); margin: 0; }
+.run-chip.deploy, .run-chip.deploy .ic { border-color: var(--cyan); }
+.run-chip.exploit, .run-chip.exploit .ic { border-color: var(--red); }
+.run-chip.contain, .run-chip.contain .ic { border-color: var(--green); }
+
+/* ---------- door stop (camera target only) ---------- */
+#door { pointer-events: none; }
+
+/* ---------- where do we go from here ---------- */
+#fromhere .band { width: 100%; height: 100%; box-sizing: border-box; display: flex;
+  flex-direction: column; justify-content: center; gap: 14px; }
+#fromhere .band > .k { font-family: var(--f-disp); font-weight: 800; font-size: 14px; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--violet); margin: 0; }
+.ribbon { flex: 1; display: flex; align-items: center; position: relative; padding: 8px 0; }
+.ribbon .rail { position: absolute; left: 26px; right: 10px; top: 29px; height: 2px;
+  background: linear-gradient(90deg, rgba(138,112,240,0.15), var(--violet));
+  box-shadow: 0 0 12px rgba(138,112,240,0.5); }
+.ribbon .rail::after { content: ""; position: absolute; right: -1px; top: -5px;
+  border-left: 10px solid var(--violet); border-top: 6px solid transparent; border-bottom: 6px solid transparent; }
+.node { flex: 1; position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-right: 28px; }
+.node .dot { width: 42px; height: 42px; border-radius: 50%; background: var(--navy);
+  border: 2px solid var(--violet); display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-disp); font-weight: 800; font-size: 16px; color: var(--violet);
+  box-shadow: 0 0 18px rgba(138,112,240,0.35); position: relative; z-index: 1; }
+.node .slots { display: flex; gap: 14px; }
+.node .slot { font-family: var(--f-mono); font-size: 10px; color: var(--ink3); }
+.node .slot span { display: inline-block; width: 88px; border-bottom: 1px dashed var(--ink3); }
+
+/* ---------- companion (hidden encore) ---------- */
+#companion { background: var(--navy); border-radius: 20px; padding: 32px; box-sizing: border-box; overflow: hidden; }
+#companion .glow { position: absolute; border-radius: 50%; filter: blur(70px); pointer-events: none; }
+#companion .glow.p { width: 300px; height: 300px; left: 500px; top: 100px; background: rgba(138,112,240,0.12); }
+#companion .glow.g { width: 350px; height: 350px; left: 50px; top: 250px; background: rgba(48,186,120,0.10); }
+#companion .k { font-family: var(--f-disp); font-weight: 700; font-size: 13px; letter-spacing: .05em;
+  text-transform: uppercase; color: var(--violet); margin: 0 0 4px; }
+#companion h2 { font-family: var(--f-disp); font-weight: 800; font-size: 28px; line-height: 1.2;
+  color: var(--ink); margin: 0 0 24px; }
+.pipeline { display: flex; gap: 10px; align-items: stretch; margin-bottom: 24px; }
+.pgroup { position: relative; border: 1.5px solid; border-radius: 14px; padding: 16px 10px 10px;
+  display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0; }
+.pgroup .pg-label { position: absolute; top: -9px; left: 14px; padding: 0 8px;
+  background: var(--navy); font-family: var(--f-disp); font-weight: 800; font-size: 11px;
+  letter-spacing: 0.08em; line-height: 18px; }
+.pgroup.fossa { border-color: var(--green-deep); }
+.pgroup.fossa .pg-label { color: var(--green-bright); }
+.pgroup.nv { border-color: #cc5500; }
+.pgroup.nv .pg-label { color: #e0762e; }
+.pgroup > img { width: 16px; height: 16px; flex: none; }
+.pnode { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.pnode .hd { display: flex; align-items: center; justify-content: space-between; }
+.pnode .hd .st { font-family: var(--f-disp); font-weight: 800; font-size: 12px; color: var(--ink3); margin: 0; }
+.pnode .hd .sq { width: 6px; height: 6px; border-radius: 3px; background: var(--ink3); }
+.pnode .t { font-family: var(--f-disp); font-weight: 800; font-size: 15px; color: var(--ink); margin: 0; }
+.pnode .d { font-size: 11px; line-height: 1.4; color: var(--ink2); margin: 0; }
+.pnode.sensor { border-color: var(--amber); } .pnode.sensor .hd .st { color: var(--amber); } .pnode.sensor .hd .sq { background: var(--amber); }
+.pnode.import { border-color: var(--cyan); } .pnode.import .hd .st { color: var(--cyan); } .pnode.import .hd .sq { background: var(--cyan); }
+.pnode.protect { border: 2px solid var(--green-deep); }
+.pnode.protect .hd .st, .pnode.protect .t { color: var(--green-bright); } .pnode.protect .hd .sq { background: var(--green-bright); }
+.pipeline > img { width: 16px; height: 16px; flex: none; align-self: center;
+  transform: translateY(3px); /* group padding is 16 top / 10 bottom, so content centre sits 3px below box centre */ }
+.bottom-grid { display: flex; gap: 20px; align-items: stretch; }
+.bcol { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+.bimg { flex: 1; min-width: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  position: relative; /* img is absolute so the column height follows the text column, not the image */ }
+.bimg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  object-position: 62% 42%; display: block; }
+.keyline { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px;
+  display: flex; gap: 16px; align-items: center; }
+.keyline .bar { width: 4px; height: 40px; border-radius: 2px; background: var(--green-bright); flex: none; }
+.keyline .k2 { font-family: var(--f-disp); font-weight: 700; font-size: 11px; color: var(--ink3); margin: 0 0 4px; }
+.keyline .q { font-family: var(--f-disp); font-weight: 800; font-size: 18px; color: var(--ink); margin: 0; }
+.details { display: flex; gap: 20px; align-items: stretch; }
+.dcard { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px;
+  flex: 1; min-width: 0; }
+.dcard .h { font-family: var(--f-disp); font-weight: 700; font-size: 12px; margin: 0 0 12px; }
+.dcard.threat .h { color: var(--red); }
+.dcard.note .h { color: var(--ink3); }
+.cve-chip { background: var(--navy); border-radius: 6px; padding: 8px; margin-bottom: 12px; }
+.cve-chip .c { font-family: var(--f-mono); font-weight: 700; font-size: 12px; color: var(--ink); margin: 0; }
+.cve-chip .d { font-size: 11px; color: var(--ink2); margin: 4px 0 0; }
+.dcard .lbl { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+.dcard .lbl .n { font-weight: 600; color: var(--ink2); }
+.dcard .lbl .v { font-family: var(--f-mono); font-weight: 700; color: var(--red); }
+.dcard .track { height: 8px; border-radius: 4px; background: var(--navy); overflow: hidden; }
+.dcard .track .fill { height: 100%; border-radius: 4px; background: var(--red); width: 0; }
+.dcard.note p { font-size: 11px; line-height: 1.5; color: var(--ink2); margin: 0; }
+
+/* ---------- reveal states ---------- */
+.rv { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+.rv.on { opacity: 1; transform: none; }
+.hero-padlock.rv { opacity: 0; } .hero-padlock.rv.on { opacity: 0.35; }
+.d1 { transition-delay: .08s; } .d2 { transition-delay: .18s; } .d3 { transition-delay: .28s; }
+.d4 { transition-delay: .38s; } .d5 { transition-delay: .48s; }
+
+/* fit wrapper: footprint = box × data-scale; camera zoom = 1/data-scale */
+.fit { position: absolute; top: 0; left: 0; transform-origin: top left; }
+.hint { display: none; }
+</style>
+</head>
+<body class="impress-not-supported">
+
+<div class="fallback-message">
+  <p>This deck needs a modern browser with CSS 3D transforms (Chrome, Safari, Edge, Firefox). Open it there — no network needed.</p>
+</div>
+
+<div id="impress" data-width="1400" data-height="787" data-transition-duration="900"
+     data-max-scale="4" data-min-scale="0" data-perspective="1700">
+
+  <!-- ============ poster ground: decor + door caption, skipped in navigation ============ -->
+  <div class="step skip" id="ground" data-x="700" data-y="1210" data-z="0" data-scale="1">
+    <div class="glow g1"></div><div class="glow g2"></div><div class="glow g3"></div>
+    <div class="dotgrid"></div>
+    <div class="crate"><img src="assets/crate.png" alt=""></div>
+    <div class="door-caption">
+      <p class="k">// Ask your legal department</p>
+      <p class="q">Would you rather have a lock on your door &mdash; or a list of everything that was stolen?</p>
+    </div>
+  </div>
+
+  <!-- ============ Beat 0 — payoff (cold open) ============ -->
+  <div class="step" id="beat-0" data-x="700" data-y="310" data-z="0" data-scale="1"
+       style="width:1320px;height:541px;">
+    <div class="card">
+      <div class="corner-glow bl"></div>
+      <div class="hero-stack">
+        <div class="hero-left2">
+          <p class="hero-title rv d1"><span class="nv">Neuvector:</span><br>Zero patches.<br>Zero Exposure.</p>
+        </div>
+        <div class="hero-right3">
+          <div class="hero-img rv d2"><img src="assets/padlock-hero.png" alt=""></div>
+          <div class="contact rv d3">
+            <div class="who">
+              <p class="n">Rick Ashford</p>
+              <p class="e">rick@theashfords.org</p>
+            </div>
+            <img src="assets/rick.png" alt="Rick Ashford">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ The Stakes ============ -->
+  <div class="step" id="stakes" data-x="362" data-y="854" data-z="0" data-scale="0.58"
+       style="width:1110.3px;height:750px;">
+    <div class="fit" style="width:644px;height:435px;transform:scale(1.7241);">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <p class="kicker">// The Stakes</p>
+      <div class="story-quote rv d1">
+        <p class="q">Every major customer canceled. The company was gone in three weeks.</p>
+        <p class="a">A healthcare-records firm &mdash; one database port left exposed during a routine update.</p>
+      </div>
+      <div class="stakes-row">
+        <div class="stat-tile rv d2">
+          <p class="n">$10.2M</p>
+          <p class="l">average cost of one U.S. data breach</p>
+          <p class="src">IBM Cost of a Data Breach, 2025</p>
+        </div>
+        <div class="race rv d3">
+          <p class="h">The race you&rsquo;re already in</p>
+          <div class="row them">
+            <div class="lbl"><span>Them: disclosure &rarr; exploitation (median)</span><span class="v">5 days</span></div>
+            <div class="track"><div class="fill" data-score="5" data-max="70"></div></div>
+          </div>
+          <div class="row you">
+            <div class="lbl"><span>You: average time to remediate a critical</span><span class="v">~65 days</span></div>
+            <div class="track"><div class="fill" data-score="65" data-max="70"></div></div>
+          </div>
+          <p class="cap">It&rsquo;s a race &mdash; and you can&rsquo;t see their clock.</p>
+          <p class="src">Rapid7 Threat Landscape &middot; Edgescan 2025</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ Where the Money Leaks ============ -->
+  <div class="step" id="money" data-x="1038" data-y="854" data-z="0" data-scale="0.58"
+       style="width:1110.3px;height:750px;">
+    <div class="fit" style="width:644px;height:435px;transform:scale(1.7241);">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <p class="kicker">// Where the Money Leaks</p>
+      <p class="leak-lede">Your exposure has a number. It lives in five ledgers &mdash; worth pulling before our next conversation.</p>
+      <div class="leak rv d1"><p class="t">Incident response &amp; forensics</p><p class="blank"><b>$</b> ________</p></div>
+      <div class="leak rv d2"><p class="t">Downtime &amp; lost revenue</p><p class="blank"><b>$</b> ________</p></div>
+      <div class="leak rv d3"><p class="t">Customer churn &amp; reputation</p><p class="blank"><b>$</b> ________</p></div>
+      <div class="leak rv d4"><p class="t">Cyber-insurance premiums</p><p class="blank"><b>$</b> ________</p></div>
+      <div class="leak rv d5"><p class="t">Regulatory fines &amp; audit findings</p><p class="blank"><b>$</b> ________</p></div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ The spine / dominant hub ============ -->
+  <div class="step" id="spine" data-x="700" data-y="1290" data-z="0" data-scale="1"
+       style="width:1320px;height:340px;">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <div class="hub-head">
+        <p class="k">// The Answer</p>
+        <p class="h">&ldquo;Exploits need room to run. We take the room away.&rdquo;</p>
+        <p class="s">We allowlist legitimate application behavior instead of racing to blocklist attacks.</p>
+      </div>
+      <div class="stages">
+        <div class="stage discover rv d1">
+          <div class="hd"><p class="t">01. DISCOVER</p><div class="sq"></div></div>
+          <div class="icon-chip"><img src="assets/search.svg" alt=""></div>
+          <p class="cap">Learn the baseline.</p>
+        </div>
+        <div class="stage-arrow rv d2"><img src="assets/arrow-right.svg" alt=""></div>
+        <div class="stage monitor rv d3">
+          <div class="hd"><p class="t">02. MONITOR</p><div class="sq"></div></div>
+          <div class="icon-chip"><img src="assets/eye.svg" alt=""></div>
+          <p class="cap">Catch the known.</p>
+        </div>
+        <div class="stage-arrow rv d4"><img src="assets/arrow-right.svg" alt=""></div>
+        <div class="stage protect rv d5">
+          <div class="hd"><p class="t">03. PROTECT</p><div class="sq"></div></div>
+          <div class="icon-chip"><img src="assets/shield.svg" alt=""></div>
+          <p class="cap">Stop the unknown cold. Deny everything else.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Why current defenses miss ============ -->
+  <div class="step" id="misses" data-x="362" data-y="1721" data-z="0" data-scale="0.6"
+       style="width:1073.3px;height:741.7px;">
+    <div class="fit" style="width:644px;height:445px;transform:scale(1.6667);">
+    <div class="card" style="border-radius:16px;">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <p class="kicker">// Why Current Defenses Miss</p>
+      <div class="miss rv d1">
+        <div class="ic"><img src="assets/server.svg" alt=""></div>
+        <div class="tx"><p>Traditional security tools weren&rsquo;t built for Kubernetes &mdash; and the platform moves fast enough that what worked last year may quietly not work now.</p></div>
+      </div>
+      <div class="miss rv d2">
+        <div class="ic"><img src="assets/alert-triangle.svg" alt=""></div>
+        <div class="tx"><p>1 in 4 exploited CVEs are attacked on or before disclosure day &mdash; a patch can&rsquo;t reach those at all.</p>
+        <p class="src">VulnCheck, 1H 2025</p></div>
+      </div>
+      <div class="miss rv d3">
+        <div class="ic"><img src="assets/eye.svg" alt=""></div>
+        <div class="tx"><p>Most runtime &ldquo;blocking&rdquo; is observation underneath. It can tell you exactly what was taken &mdash; once it&rsquo;s gone.</p></div>
+      </div>
+      <div class="to-door rv d4">
+        <p>Which begs the question&hellip;</p>
+        <img src="assets/arrow-right.svg" alt="">
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ The door — lock vs. list (camera stop on the poster art) ============ -->
+  <div class="step" id="door" data-x="1038" data-y="1979" data-z="0" data-scale="0.63"
+       style="width:644px;height:481px;"></div>
+
+  <!-- ============ Live demo run order (right column, after the door) ============ -->
+  <div class="step" id="beat-4" data-x="1038" data-y="1611" data-z="0" data-scale="0.5"
+       style="width:1288px;height:450px;">
+    <div class="fit" style="width:644px;height:225px;transform:scale(2);">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <p class="kicker">Demo Track // Run Order Reference</p>
+      <div class="run-steps">
+        <div class="run-chip deploy rv d1">
+          <div class="ic"><img src="assets/rocket.svg" alt=""></div>
+          <p class="t">DEPLOY</p>
+        </div>
+        <div class="run-chip exploit rv d2">
+          <div class="ic"><img src="assets/skull.svg" alt=""></div>
+          <p class="t">EXPLOIT</p>
+        </div>
+        <div class="run-chip contain rv d3">
+          <div class="ic"><img src="assets/shield-contain.svg" alt=""></div>
+          <p class="t">PROTECT</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ The clock — poster art; seen upper-left when the camera lands on What's Next ============ -->
+  <div class="step skip" id="b33" data-x="362" data-y="2110" data-z="0" data-scale="0.5"
+       style="width:1288px;height:440px;">
+    <div class="fit" style="width:644px;height:220px;transform:scale(2);">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <div class="clk-wrap">
+        <div class="clk-text">
+          <p class="kicker">// When, Not If</p>
+          <p class="clk-line">The clock is ticking&hellip;</p>
+        </div>
+        <div class="clock" aria-hidden="true">
+          <div class="grp">
+            <div class="cell hh"><div class="half top"><span>?</span></div><div class="half bot"><span>?</span></div></div>
+            <div class="cell hh"><div class="half top"><span>?</span></div><div class="half bot"><span>?</span></div></div>
+          </div>
+          <p class="colon">:</p>
+          <div class="grp">
+            <div class="cell" id="m1" data-ch="1"><div class="half top"><span>1</span></div><div class="half bot"><span>1</span></div><div class="flap"><div class="face front"><span>1</span></div><div class="face back"><span>1</span></div></div></div>
+            <div class="cell" id="m2" data-ch="1"><div class="half top"><span>1</span></div><div class="half bot"><span>1</span></div><div class="flap"><div class="face front"><span>1</span></div><div class="face back"><span>1</span></div></div></div>
+          </div>
+          <p class="colon">:</p>
+          <div class="grp">
+            <div class="cell" id="s1" data-ch="5"><div class="half top"><span>5</span></div><div class="half bot"><span>5</span></div><div class="flap"><div class="face front"><span>5</span></div><div class="face back"><span>5</span></div></div></div>
+            <div class="cell" id="s2" data-ch="9"><div class="half top"><span>9</span></div><div class="half bot"><span>9</span></div><div class="flap"><div class="face front"><span>9</span></div><div class="face back"><span>9</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- ============ Companion — encore, hidden beneath the doors ============ -->
+  <div class="step" id="companion" data-x="1038" data-y="1979" data-z="-300" data-rotate-x="-90" data-scale="0.84"
+       style="width:800px;height:660px;">
+    <div class="glow p"></div><div class="glow g"></div>
+    <p class="k">// One more thing&hellip;</p>
+    <h2>I built a little something extra for you.</h2>
+    <div class="pipeline">
+      <div class="pgroup fossa">
+        <span class="pg-label">FOSSA</span>
+        <div class="pnode rv d1">
+          <div class="hd"><p class="st">STEP 01</p><div class="sq"></div></div>
+          <p class="t">Scanner Finding</p>
+          <p class="d">Build-time vulnerability scanner reports a severe software defect during CI/CD execution.</p>
+        </div>
+        <img src="assets/chevron-right.svg" alt="">
+        <div class="pnode sensor rv d2">
+          <div class="hd"><p class="st">STEP 02</p><div class="sq"></div></div>
+          <p class="t">Sensor Generated</p>
+          <p class="d">FOSSA automatically compiles security baseline rules matching the package signature.</p>
+        </div>
+      </div>
+      <img src="assets/chevron-right.svg" alt="">
+      <div class="pgroup nv">
+        <span class="pg-label">NeuVector</span>
+        <div class="pnode import rv d3">
+          <div class="hd"><p class="st">STEP 03</p><div class="sq"></div></div>
+          <p class="t">Imported to Runtime</p>
+          <p class="d">Vulnerability rules instantly sync with runtime engine (NeuVector) without rebuilds.</p>
+        </div>
+        <img src="assets/chevron-right.svg" alt="">
+        <div class="pnode protect rv d4">
+          <div class="hd"><p class="st">STEP 04</p><div class="sq"></div></div>
+          <p class="t">Protect Enabled</p>
+          <p class="d">Active protection enforces behaviors. Unauthorized RCE attempts are blocked in real-time.</p>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-grid">
+      <div class="bcol">
+        <div class="keyline rv d5">
+          <div class="bar"></div>
+          <div>
+            <p class="k2">THE CORE PARADIGM</p>
+            <p class="q">&ldquo;Protect as fast as you can find it.&rdquo;</p>
+          </div>
+        </div>
+        <div class="dcard threat">
+          <p class="h">Target Case Study</p>
+          <div class="cve-chip">
+            <p class="c">CVE-2021-44228 (Log4Shell)</p>
+            <p class="d">Apache Log4j2 JNDI Message Lookup RCE vulnerability</p>
+          </div>
+          <div class="lbl"><span class="n">NVD CVSS 3.1 Base Score</span><span class="v">10.0 (CRITICAL)</span></div>
+          <div class="track"><div class="fill" data-score="10"></div></div>
+        </div>
+      </div>
+      <div class="bimg rv d5"><img src="assets/rabbit-knight.png" alt=""></div>
+    </div>
+  </div>
+
+  <!-- ============ Where do we go from here ============ -->
+  <div class="step" id="fromhere" data-x="700" data-y="2348" data-z="0" data-scale="1"
+       style="width:1320px;height:145px;">
+    <div class="band">
+      <p class="k">// What&rsquo;s Next?</p>
+      <div class="ribbon">
+        <div class="rail"></div>
+        <div class="node rv d1">
+          <div class="dot">1</div>
+          <div class="slots"><p class="slot">OWNER <span></span></p><p class="slot">DATE <span></span></p></div>
+        </div>
+        <div class="node rv d2">
+          <div class="dot">2</div>
+          <div class="slots"><p class="slot">OWNER <span></span></p><p class="slot">DATE <span></span></p></div>
+        </div>
+        <div class="node rv d3">
+          <div class="dot">3</div>
+          <div class="slots"><p class="slot">OWNER <span></span></p><p class="slot">DATE <span></span></p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Overview — the composed poster (kept last in DOM) ============ -->
+  <div class="step" id="overview" data-x="700" data-y="1210" data-z="0" data-scale="3.15"
+       style="width:1400px;height:787px;pointer-events:none;"></div>
+
+</div>
+
+<script src="vendor/impress.js"></script>
+<script src="vendor/d3.v7.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var api = impress();
+  api.init();
+  if (!window.location.hash) { api.goto(document.getElementById("beat-0"), 0); }
+
+  var played = {};
+
+  function drawBars(root, animate) {
+    d3.select(root).selectAll(".fill").each(function () {
+      var el = d3.select(this);
+      var max = parseFloat(this.getAttribute("data-max") || "10");
+      var pct = (parseFloat(this.getAttribute("data-score")) / max) * 100 + "%";
+      if (animate) {
+        el.style("width", "0%").transition().duration(900).ease(d3.easeCubicOut).style("width", pct);
+      } else {
+        el.interrupt().style("width", pct);
+      }
+    });
+  }
+
+  function revealAll(root, animate) {
+    var nodes = root.querySelectorAll(".rv");
+    for (var i = 0; i < nodes.length; i++) { nodes[i].classList.add("on"); }
+    if (!animate) { for (var j = 0; j < nodes.length; j++) { nodes[j].style.transition = "none"; } }
+  }
+
+  function resetReveal(root) {
+    var nodes = root.querySelectorAll(".rv");
+    for (var i = 0; i < nodes.length; i++) { nodes[i].classList.remove("on"); }
+  }
+
+  function finishAll() {
+    var steps = document.querySelectorAll("#impress .step");
+    for (var i = 0; i < steps.length; i++) {
+      revealAll(steps[i], false);
+      drawBars(steps[i], false);
+    }
+  }
+
+  finishAll();
+
+  // ---------- countdown flip clock (starts on first focus of #b33) ----------
+  var clockStarted = false;
+  function setCell(id, ch) {
+    var cell = document.getElementById(id);
+    if (cell.dataset.ch === ch) { return; }
+    var old = cell.dataset.ch;
+    cell.dataset.ch = ch;
+    cell.querySelector(".half.top span").textContent = ch;      // revealed as the flap falls
+    cell.querySelector(".face.front span").textContent = old;   // flap carries the old digit down
+    cell.querySelector(".face.back span").textContent = ch;     // lands showing the new bottom
+    cell.classList.add("flip");
+    setTimeout(function () {
+      cell.querySelector(".half.bot span").textContent = ch;
+      cell.querySelector(".face.front span").textContent = ch;
+      cell.classList.remove("flip");
+    }, 205);
+  }
+  function startClock() {
+    if (clockStarted) { return; }
+    clockStarted = true;
+    var m = 11, s = 59;
+    var t = setInterval(function () {
+      if (m === 0 && s === 0) { clearInterval(t); return; }
+      if (s === 0) { m -= 1; s = 59; } else { s -= 1; }
+      var mm = (m < 10 ? "0" : "") + m, ss = (s < 10 ? "0" : "") + s;
+      setCell("m1", mm[0]); setCell("m2", mm[1]);
+      setCell("s1", ss[0]); setCell("s2", ss[1]);
+    }, 1000);
+  }
+
+  document.addEventListener("impress:stepenter", function (e) {
+    var step = e.target;
+    if (step.id === "fromhere") { startClock(); }
+    if (step.id === "overview" || step.id === "ground" || step.id === "door") { finishAll(); return; }
+    if (played[step.id]) { return; }
+    played[step.id] = true;
+    resetReveal(step);
+    var nodes = step.querySelectorAll(".rv");
+    for (var i = 0; i < nodes.length; i++) { nodes[i].style.transition = ""; }
+    void step.offsetWidth;
+    revealAll(step, true);
+    drawBars(step, true);
+  });
+
+  function toPoster() { api.goto(document.getElementById("overview"), 900); }
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) { return; }
+    if (e.key === "Escape" || e.key === "o" || e.key === "O" || e.key === "Home") { toPoster(); }
+  }, true);
+})();
+</script>
+<!-- DECK-END -->
+<!-- Validation: key messages [3: stakes are existential · current defenses miss the unknown · behaviour enforcement covers it without slowing you] ·
+     panels [8 poster + door stop + 1 hidden encore] · detail views [1: encore beneath the doors] ·
+     steps over 30 words [3: stakes, misses, companion — self-guided leave-behind register] ·
+     fonts [3: SUSE, Montserrat, Fira Code — local woff2] · main colors [navy/panel/ink] + accent [SUSE green; fixed series cyan/amber/violet/red] ·
+     unsourced numbers [0 — IBM 2025, Rapid7, Edgescan 2025, VulnCheck 1H2025 printed inline; healthcare story is Rick's firsthand account, spoken] ·
+     icon styles [1: Figma-exported SVG] · flow cue [top-to-bottom band flow; ribbon rail in from-here strip] ·
+     overview reads as a composed poster [yes] · opens on the poster [yes] ·
+     next steps owned+dated [live-capture design: 3 blank owner/date slots filled in the room — Rick's call 2026-08-03] ·
+     customer-owned step [captured live] · external URLs [0] · invented facts [0] -->
+</html>

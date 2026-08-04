@@ -11,7 +11,10 @@
 // (secrets.token_urlsafe) so the URL is unguessable and a hit is attributable.
 // Anything not listed here falls through to the normal 404, so a wrong token
 // never serves the page.
-const TRACKING_PATHS = new Map([["/for/AlczhpBFB26dzeRX", "/fossa-mcp.html"]]);
+const TRACKING_PATHS = new Map([
+	["/for/AlczhpBFB26dzeRX", "/fossa-mcp.html"],
+	["/for/SfICAmWYY9AYj4fN", "/neuvector-gtm/index.html"],
+]);
 
 export default {
 	async fetch(request, env) {
