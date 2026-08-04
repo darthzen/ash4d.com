@@ -92,9 +92,9 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 #stakes .kicker { color: var(--red); }
 .story-quote { background: rgba(209,59,79,0.08); border: 1px solid var(--red); border-radius: 16px;
   padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 22px rgba(209,59,79,0.12); }
-.story-quote .q { font-family: var(--f-disp); font-weight: 800; font-size: 21px; line-height: 1.3;
-  color: var(--ink); margin: 0 0 8px; }
-.story-quote .a { font-size: 11px; color: var(--ink2); margin: 0; }
+.story-quote .q { font-family: var(--f-disp); font-weight: 800; font-size: 34px; line-height: 1.15;
+  color: var(--ink); margin: 0 0 10px; }
+.story-quote .a { font-size: 11px; color: var(--ink2); letter-spacing: .02em; margin: 0; }
 .stakes-row { display: flex; gap: 20px; align-items: stretch; }
 .stat-tile { background: var(--navy); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
   flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: flex-start; }
@@ -117,11 +117,15 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 /* ---------- money leaks panel ---------- */
 #money .kicker { color: var(--green); }
 .leak-lede { font-size: 13px; color: var(--ink2); line-height: 1.35; margin: 0 0 11px; }
-.leak { background: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 8px 14px;
-  display: flex; gap: 12px; align-items: center; margin-bottom: 7px; }
+.leak { background: var(--navy); border: 1px solid var(--line); border-radius: 12px; padding: 15px 16px;
+  display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.leak:last-child { margin-bottom: 0; }
 .leak .t { flex: 1; font-weight: 600; font-size: 12px; color: var(--ink); margin: 0; }
-.leak .blank { font-family: var(--f-mono); font-size: 12px; color: var(--ink3); flex: none; }
-.leak .blank b { color: var(--green-bright); font-weight: 700; }
+.leak .blank { font-family: var(--f-mono); font-weight: 700; font-size: 17px; line-height: 1;
+  flex: none; margin: 0; display: flex; align-items: flex-end; gap: 7px; }
+.leak .blank b { color: var(--green-bright); font-weight: 700; padding-bottom: 5px; }
+.leak .blank .slot { width: 74px; text-align: center; color: var(--red);
+  padding-bottom: 5px; border-bottom: 1.5px solid var(--ink3); }
 
 /* ---------- hub ---------- */
 #spine .card { border: 1.5px solid var(--green); border-radius: 20px;
@@ -151,6 +155,38 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 .stage.protect .cap { color: var(--green); }
 .stage-arrow { width: 48px; display: flex; align-items: center; justify-content: center; align-self: center; }
 .stage-arrow img { width: 20px; height: 20px; }
+
+/* ---------- architecture panel (three.js) ---------- */
+#arch .card { border: 1.5px solid var(--cyan); border-radius: 20px;
+  box-shadow: 0 14px 28px -12px rgba(0,0,0,0.25), 0 16px 32px rgba(0,150,226,0.08); }
+#arch .kicker { color: var(--cyan); text-align: center; margin-bottom: 4px; }
+.arch-h { font-family: var(--f-disp); font-weight: 800; font-size: 22px; color: var(--ink);
+  text-align: center; margin: 0 0 10px; }
+.arch-stage { position: relative; width: 1256px; height: 410px; margin: 0 auto; }
+#arch-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.arch-labels { position: absolute; inset: 0; pointer-events: none; }
+.nvchip { position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
+  font-family: var(--f-disp); font-weight: 800; font-size: 11px; letter-spacing: .07em;
+  text-transform: uppercase; padding: 4px 9px; border-radius: 8px;
+  background: rgba(6,19,45,0.86); border: 1px solid; }
+.arch-verdict { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  font-family: var(--f-disp); font-weight: 800; font-size: 15px; color: var(--red);
+  background: rgba(6,19,45,0.94); border: 1px solid var(--red); border-radius: 999px;
+  padding: 7px 18px; margin: 0; white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(209,59,79,0.18);
+  opacity: 0; transition: opacity .4s ease; }
+.arch-verdict.on { opacity: 1; }
+.arch-legend { display: flex; gap: 14px; margin-top: 10px; }
+.svc { flex: 1; min-width: 0; background: var(--navy); border: 1px solid var(--line);
+  border-top-width: 2px; border-radius: 12px; padding: 10px 12px; }
+.svc .n { font-family: var(--f-disp); font-weight: 800; font-size: 13px; margin: 0 0 3px; }
+.svc .k { font-family: var(--f-mono); font-size: 9px; color: var(--ink3); margin: 0 0 5px; }
+.svc .d { font-size: 11px; line-height: 1.35; color: var(--ink2); margin: 0; }
+.svc.enforcer   { border-top-color: var(--green-bright); } .svc.enforcer   .n { color: var(--green-bright); }
+.svc.controller { border-top-color: var(--cyan); }         .svc.controller .n { color: var(--cyan); }
+.svc.manager    { border-top-color: var(--violet); }       .svc.manager    .n { color: var(--violet); }
+.svc.scanner    { border-top-color: var(--amber); }        .svc.scanner    .n { color: var(--amber); }
+.svc.updater    { border-top-color: var(--ink3); }         .svc.updater    .n { color: var(--ink2); }
 
 /* ---------- defenses-miss panel ---------- */
 #misses .card { display: flex; flex-direction: column; }
@@ -334,6 +370,23 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 /* fit wrapper: footprint = box × data-scale; camera zoom = 1/data-scale */
 .fit { position: absolute; top: 0; left: 0; transform-origin: top left; }
 .hint { display: none; }
+
+/* ---------- touch navigation (phone / tablet) ---------- */
+/* Two invisible tap zones. Hidden on pointing devices so they can never swallow a
+   desktop click; impress.js's own swipe handling is left intact in the middle 60%. */
+.tapnav { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .tapnav { display: block; position: fixed; top: 0; bottom: 0; width: 20vw;
+    z-index: 40; background: transparent; -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation; }
+  .tapnav.prev { left: 0; }
+  .tapnav.next { right: 0; }
+  .tapnav::after { content: ""; position: absolute; top: 50%; width: 13px; height: 13px;
+    margin-top: -7px; border-top: 2px solid var(--ink3); border-right: 2px solid var(--ink3);
+    opacity: 0.28; }
+  .tapnav.prev::after { left: 16px; transform: rotate(-135deg); }
+  .tapnav.next::after { right: 16px; transform: rotate(45deg); }
+}
 </style>
 </head>
 <body class="impress-not-supported">
@@ -387,8 +440,8 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
       <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
       <p class="kicker">// The Stakes</p>
       <div class="story-quote rv d1">
-        <p class="q">Every major customer canceled. The company was gone in three weeks.</p>
-        <p class="a">A healthcare-records firm &mdash; one database port left exposed during a routine update.</p>
+        <p class="q">Gone in three weeks.</p>
+        <p class="a">Healthcare records &middot; one open database port</p>
       </div>
       <div class="stakes-row">
         <div class="stat-tile rv d2">
@@ -421,12 +474,12 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     <div class="card">
       <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
       <p class="kicker">// Where the Money Leaks</p>
-      <p class="leak-lede">Your exposure has a number. It lives in five ledgers &mdash; worth pulling before our next conversation.</p>
-      <div class="leak rv d1"><p class="t">Incident response &amp; forensics</p><p class="blank"><b>$</b> ________</p></div>
-      <div class="leak rv d2"><p class="t">Downtime &amp; lost revenue</p><p class="blank"><b>$</b> ________</p></div>
-      <div class="leak rv d3"><p class="t">Customer churn &amp; reputation</p><p class="blank"><b>$</b> ________</p></div>
-      <div class="leak rv d4"><p class="t">Cyber-insurance premiums</p><p class="blank"><b>$</b> ________</p></div>
-      <div class="leak rv d5"><p class="t">Regulatory fines &amp; audit findings</p><p class="blank"><b>$</b> ________</p></div>
+      <p class="leak-lede">Five costs that rarely make the breach math.</p>
+      <div class="leak rv d1"><p class="t">Downtime while the patch clears change control</p><p class="blank"><b>$</b><span class="slot">?</span></p></div>
+      <div class="leak rv d2"><p class="t">Engineers pulled off the roadmap to chase a CVE</p><p class="blank"><b>$</b><span class="slot">?</span></p></div>
+      <div class="leak rv d3"><p class="t">The insurance premium after a first claim</p><p class="blank"><b>$</b><span class="slot">?</span></p></div>
+      <div class="leak rv d4"><p class="t">Audit findings that reopen controls you had closed</p><p class="blank"><b>$</b><span class="slot">?</span></p></div>
+      <div class="leak rv d5"><p class="t">Customers who leave quietly</p><p class="blank"><b>$</b><span class="slot">?</span></p></div>
     </div>
     </div>
   </div>
@@ -437,9 +490,9 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     <div class="card">
       <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
       <div class="hub-head">
-        <p class="k">// The Answer</p>
-        <p class="h">&ldquo;Exploits need room to run. We take the room away.&rdquo;</p>
-        <p class="s">We allowlist legitimate application behavior instead of racing to blocklist attacks.</p>
+        <p class="k">// The Answer: Neuvector</p>
+        <p class="h">We learn what your application normally does, and hold it to that.</p>
+        <p class="s">An attack has to step outside normal behavior to work. That is the moment we stop it &mdash; on day one, before a patch exists.</p>
       </div>
       <div class="stages">
         <div class="stage discover rv d1">
@@ -451,13 +504,53 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
         <div class="stage monitor rv d3">
           <div class="hd"><p class="t">02. MONITOR</p><div class="sq"></div></div>
           <div class="icon-chip"><img src="assets/eye.svg" alt=""></div>
-          <p class="cap">Catch the known.</p>
+          <p class="cap">Watch and warn.</p>
         </div>
         <div class="stage-arrow rv d4"><img src="assets/arrow-right.svg" alt=""></div>
         <div class="stage protect rv d5">
           <div class="hd"><p class="t">03. PROTECT</p><div class="sq"></div></div>
           <div class="icon-chip"><img src="assets/shield.svg" alt=""></div>
-          <p class="cap">Stop the unknown cold. Deny everything else.</p>
+          <p class="cap">Block the unknown.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Architecture — hidden beneath the hub, camera dives under ============ -->
+  <!-- rotate-Y (not X): every other step, including #companion at rotate-x -90, goes edge-on from here.
+       data-z must exceed ~990: the poster lands edge-on at x' = -z, and perspective 1700 pulls its near
+       edge back to 0.708*|z|; anything under that and the poster shows as a strip down the left margin. -->
+  <div class="step" id="arch" data-x="700" data-y="1290" data-z="-1800" data-rotate-y="90" data-scale="1"
+       style="width:1320px;height:720px;">
+    <div class="card">
+      <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
+      <p class="kicker">// Under the Hood</p>
+      <p class="arch-h">Five services, one question: is this normal?</p>
+      <div class="arch-stage">
+        <canvas id="arch-canvas"></canvas>
+        <div class="arch-labels" id="arch-labels"></div>
+        <p class="arch-verdict" id="arch-verdict">Blocked at the Enforcer &mdash; it never reached your workload</p>
+      </div>
+      <div class="arch-legend">
+        <div class="svc enforcer rv d1">
+          <p class="n">Enforcer</p><p class="k">DaemonSet &middot; one per node</p>
+          <p class="d">Sits inline on every node. Traffic reaches your workload only after it clears here.</p>
+        </div>
+        <div class="svc controller rv d2">
+          <p class="n">Controller</p><p class="k">Deployment &middot; control plane</p>
+          <p class="d">Holds the learned baseline and your rules, including the ones you declare as Kubernetes CRDs.</p>
+        </div>
+        <div class="svc manager rv d3">
+          <p class="n">Manager</p><p class="k">Deployment &middot; console + API</p>
+          <p class="d">The console your team works in, and the API your pipelines call.</p>
+        </div>
+        <div class="svc scanner rv d4">
+          <p class="n">Scanner</p><p class="k">Deployment &middot; on demand</p>
+          <p class="d">Finds known vulnerabilities in images, running containers and hosts.</p>
+        </div>
+        <div class="svc updater rv d5">
+          <p class="n">Updater</p><p class="k">CronJob &middot; daily</p>
+          <p class="d">Brings in fresh vulnerability data every day, on a schedule.</p>
         </div>
       </div>
     </div>
@@ -641,8 +734,12 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 
 </div>
 
+<div class="tapnav prev" id="tap-prev" aria-hidden="true"></div>
+<div class="tapnav next" id="tap-next" aria-hidden="true"></div>
+
 <script src="vendor/impress.js"></script>
 <script src="vendor/d3.v7.min.js"></script>
+<script src="vendor/three.min.js"></script>
 <script>
 (function () {
   "use strict";
@@ -717,9 +814,446 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     }, 1000);
   }
 
+  // ---------- architecture diagram (three.js; runs only while #arch is on screen) ----------
+  var arch = (function () {
+    var noop = { start: function () {}, stop: function () {} };
+    var canvas = document.getElementById("arch-canvas");
+    var labelHost = document.getElementById("arch-labels");
+    var verdict = document.getElementById("arch-verdict");
+    if (!canvas || !window.THREE) { return noop; }
+
+    var W = 1256, H = 410;
+    var C = { green: 0x37c98c, cyan: 0x0096e2, violet: 0x8a70f0,
+              amber: 0xc08414, red: 0xd13b4f, grey: 0x5f6d8a, ink: 0x9fb0cc,
+              // the workload: the one thing on the diagram being defended. Bright yellow, well
+              // clear of red (blocked) and of the Scanner's darker amber.
+              yellow: 0xffd83d,
+              // link colours, shared with the ambient pulses so a bulge is exactly the
+              // colour of the line it is travelling along and reads as the line swelling
+              link: 0x192d54, lane: 0x24406e };
+
+    // Traffic lane runs left to right at y=-1.2: ingress -> enforcer gate -> workload.
+    // Control plane sits above it. The Enforcer is inline in the data path; the CRD only
+    // declares rules, which reach the Enforcer via the Controller.
+    var NODES = [
+      { id:"internet",   label:"Internet",             pos:[-13.6,-1.2, 0.0], color:C.ink,    size:0.95, cloud:true },
+      // ingress gets a damped flash: it fires on every single request, so at full strength
+      // it pulses harder than the Enforcer block and pulls the eye off the gate
+      { id:"ingress",    label:"Ingress",              pos:[ -9.2,-1.2, 0.0], color:C.ink,    size:0.85, flashGain:0.28 },
+      { id:"enforcer",   label:"Enforcer",             pos:[ -2.6,-1.2, 0.0], color:C.green,  size:0.95 },
+      { id:"workload",   label:"Your workload",        pos:[  5.2,-1.2, 0.0], color:C.yellow, size:1.15 },
+      { id:"controller", label:"Controller",           pos:[ -2.6, 2.4,-0.6], color:C.cyan,   size:1.15, up:true },
+      { id:"crd",        label:"Security rules (CRD)", pos:[ -9.6, 2.4,-1.0], color:C.cyan,   size:0.75, up:true },
+      { id:"scanner",    label:"Scanner",              pos:[  9.4, 2.0,-0.8], color:C.amber,  size:0.85, up:true },
+      { id:"manager",    label:"Manager",              pos:[ 10.6,-2.6,-0.6], color:C.violet, size:0.85 },
+      { id:"updater",    label:"Updater",              pos:[ 13.0, 2.0,-1.4], color:C.grey,   size:0.75, up:true }
+    ];
+    var LINKS = [["crd","controller"], ["controller","enforcer"],
+                 ["scanner","controller"], ["manager","controller"], ["updater","scanner"]];
+
+    var renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    } catch (err) { return noop; }
+    if (!renderer) { return noop; }
+    renderer.setPixelRatio(Math.min((window.devicePixelRatio || 1) * 1.5, 3));
+    renderer.setSize(W, H, false);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 100);
+    camera.position.set(0, 0.3, 14);
+    camera.lookAt(0, 0, 0);
+    var world = new THREE.Group();
+    scene.add(world);
+
+    var byId = {};
+    NODES.forEach(function (n) {
+      var g = new THREE.Group();
+      g.position.set(n.pos[0], n.pos[1], n.pos[2]);
+      var s = n.size;
+      if (n.cloud) {
+        // five overlapping wireframe puffs read as a cloud without needing a texture
+        [[0,0.05,0,0.92],[-0.86,-0.20,0.10,0.60],[0.88,-0.16,-0.10,0.64],
+         [-0.42,0.46,0.06,0.56],[0.48,0.44,-0.06,0.52]].forEach(function (pf) {
+          var puff = new THREE.Mesh(new THREE.IcosahedronGeometry(pf[3], 1),
+            new THREE.MeshBasicMaterial({ color: n.color, wireframe: true, transparent: true, opacity: 0.5 }));
+          puff.position.set(pf[0], pf[1], pf[2]);
+          g.add(puff);
+        });
+      }
+      var shell = new THREE.Mesh(new THREE.BoxGeometry(s, s, s),
+        new THREE.MeshBasicMaterial({ color: n.color, wireframe: true, transparent: true, opacity: 0.9 }));
+      var core = new THREE.Mesh(new THREE.BoxGeometry(s * 0.72, s * 0.72, s * 0.72),
+        new THREE.MeshBasicMaterial({ color: n.color, transparent: true, opacity: 0.16 }));
+      var halo = new THREE.Mesh(new THREE.BoxGeometry(s * 1.5, s * 1.5, s * 1.5),
+        new THREE.MeshBasicMaterial({ color: n.color, wireframe: true, transparent: true, opacity: 0 }));
+      if (n.cloud) { shell.visible = false; core.visible = false; halo.visible = false; }
+      g.add(shell); g.add(core); g.add(halo);
+      world.add(g);
+
+      var hex = "#" + ("000000" + n.color.toString(16)).slice(-6);
+      var chip = document.createElement("div");
+      chip.className = "nvchip";
+      chip.textContent = n.label;
+      chip.style.color = hex;
+      chip.style.borderColor = hex;
+      labelHost.appendChild(chip);
+
+      byId[n.id] = { def: n, group: g, shell: shell, core: core, halo: halo,
+                     chip: chip, flash: -99, flashColor: n.color };
+    });
+
+    // ---- the inline gate: traffic physically passes through this plane ----
+    var GATE = byId.enforcer.group.position.clone();
+    var gateFrame = new THREE.Mesh(new THREE.BoxGeometry(0.28, 3.5, 2.7),
+      new THREE.MeshBasicMaterial({ color: C.green, wireframe: true, transparent: true, opacity: 0.5 }));
+    gateFrame.position.copy(GATE);
+    world.add(gateFrame);
+    var gatePlane = new THREE.Mesh(new THREE.PlaneGeometry(2.7, 3.5),
+      new THREE.MeshBasicMaterial({ color: C.green, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+    gatePlane.rotation.y = Math.PI / 2;
+    gatePlane.position.copy(GATE);
+    world.add(gatePlane);
+    var gateFlash = -99, gateFlashColor = C.green;
+    // shockwave: expands across the gate face when a request is refused
+    var shock = new THREE.Mesh(new THREE.RingGeometry(0.55, 0.72, 56),
+      new THREE.MeshBasicMaterial({ color: C.red, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+    // faces the viewer, not the gate plane: an in-plane ring would be edge-on and read as a line
+    shock.position.copy(GATE);
+    world.add(shock);
+    var shockT = -99, SHOCK = 1.05;
+
+    // ---- links ----
+    LINKS.forEach(function (l) {
+      var a = byId[l[0]].group.position, b = byId[l[1]].group.position;
+      world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a.clone(), b.clone()]),
+        new THREE.LineBasicMaterial({ color: C.link, transparent: true, opacity: 0.95 })));
+    });
+    [["internet","ingress"], ["ingress","enforcer"], ["enforcer","workload"]].forEach(function (l) {
+      var a = byId[l[0]].group.position, b = byId[l[1]].group.position;
+      world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a.clone(), b.clone()]),
+        new THREE.LineBasicMaterial({ color: 0x24406e, transparent: true, opacity: 1 })));
+    });
+
+    // ---- control-plane pulse pool ----
+    // A pulse is a sphere stretched along the link and drawn in the link's own colour, so it
+    // reads as a bulge moving through the line rather than a bead sitting on top of it.
+    var pool = [], POOL = 14;
+    var PULSE_AXIS = new THREE.Vector3(1, 0, 0), pulseDir = new THREE.Vector3();
+    for (var i = 0; i < POOL; i++) {
+      var m = new THREE.Mesh(new THREE.SphereGeometry(1, 14, 8),
+        new THREE.MeshBasicMaterial({ color: C.link, transparent: true, opacity: 0 }));
+      m.scale.set(0.52, 0.075, 0.075);   // ~50px long, ~7px thick against a 1px line
+      m.visible = false;
+      world.add(m);
+      pool.push({ mesh: m, active: false, from: null, to: null, t0: 0, dur: 1 });
+    }
+    function spawnPulse(fromV, toV, dur, color, now) {
+      for (var k = 0; k < pool.length; k++) {
+        if (!pool[k].active) {
+          var p = pool[k];
+          p.active = true; p.from = fromV.clone(); p.to = toV.clone();
+          p.t0 = now; p.dur = dur;
+          p.mesh.material.color.setHex(color);
+          pulseDir.subVectors(toV, fromV).normalize();
+          p.mesh.quaternion.setFromUnitVectors(PULSE_AXIS, pulseDir);
+          p.mesh.visible = true;
+          return;
+        }
+      }
+    }
+
+    // ---- traffic: each request is a cluster of points that travels, then passes or dissolves ----
+    var PTS = 18, MAXPK = 22, MAXP = PTS * MAXPK;
+    var pPos = new Float32Array(MAXP * 3);
+    var pCol = new Float32Array(MAXP * 3);
+    var pAlp = new Float32Array(MAXP);
+    var pSiz = new Float32Array(MAXP);
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.BufferAttribute(pPos, 3));
+    geo.setAttribute("aColor", new THREE.BufferAttribute(pCol, 3));
+    geo.setAttribute("aAlpha", new THREE.BufferAttribute(pAlp, 1));
+    geo.setAttribute("aSize", new THREE.BufferAttribute(pSiz, 1));
+    var points = new THREE.Points(geo, new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      uniforms: { uPR: { value: renderer.getPixelRatio() } },
+      vertexShader:
+        // aSize is in CSS px at the lane's depth; uPR converts to framebuffer px so the
+        // dots stay the same apparent size whatever devicePixelRatio the display reports.
+        "uniform float uPR;" +
+        "attribute float aAlpha; attribute float aSize; attribute vec3 aColor;" +
+        "varying float vA; varying vec3 vC;" +
+        "void main(){ vA = aAlpha; vC = aColor;" +
+        "vec4 mv = modelViewMatrix * vec4(position, 1.0);" +
+        "gl_PointSize = aSize * uPR * (14.0 / -mv.z);" +
+        "gl_Position = projectionMatrix * mv; }",
+      fragmentShader:
+        "varying float vA; varying vec3 vC;" +
+        "void main(){ float d = length(gl_PointCoord - vec2(0.5));" +
+        "if (d > 0.5) discard;" +
+        "float a = smoothstep(0.5, 0.04, d);" +
+        "gl_FragColor = vec4(vC, vA * a); }"
+    }));
+    world.add(points);
+
+    var ENTRY = byId.internet.group.position.clone();  // traffic is born in the Internet cloud
+    var IN = byId.ingress.group.position.clone();      // ingress sits on the ENTRY->GATE line
+    var OUT = byId.workload.group.position.clone();
+    var IN_FRAC = (IN.x - ENTRY.x) / (GATE.x - ENTRY.x);   // where ingress falls along phase 0
+    var packets = [];
+    for (var q = 0; q < MAXPK; q++) {
+      var off = [], vel = [];
+      for (var r = 0; r < PTS; r++) {
+        // points seeded in a small sphere so the packet reads as a glowing ball
+        var th = Math.acos(2 * ((r + 0.5) / PTS) - 1), ph = r * 2.399963;
+        var rad = 0.08 + 0.20 * ((r % 5) / 5);
+        off.push(new THREE.Vector3(rad * Math.sin(th) * Math.cos(ph),
+                                   rad * Math.sin(th) * Math.sin(ph),
+                                   rad * Math.cos(th)));
+        vel.push(new THREE.Vector3());
+      }
+      // baseOff is the pristine seed shape. A blocked packet integrates its backsplash and
+      // gravity into off[] during the dissolve, so a reused slot must be restored first --
+      // otherwise the next request renders as a ball three units below the lane.
+      packets.push({ active: false, blocked: false, phase: 0, t0: 0,
+                     off: off, baseOff: off.map(function (v) { return v.clone(); }),
+                     vel: vel, seed: q });
+    }
+    function resetPacket(p) {
+      for (var r = 0; r < PTS; r++) { p.off[r].copy(p.baseOff[r]); p.vel[r].set(0, 0, 0); }
+    }
+    var tmp = new THREE.Vector3();
+    // separate scratch vector: writePacket must never alias the `center` it is handed
+    var tmpP = new THREE.Vector3();
+
+    function launch(now, idx) {
+      for (var k = 0; k < packets.length; k++) {
+        if (!packets[k].active) {
+          var p = packets[k];
+          resetPacket(p);
+          p.active = true; p.phase = 0; p.t0 = now; p.hitIn = false;
+          // deterministic but irregular: roughly one request in four is hostile
+          p.blocked = ((idx * 7 + 3) % 11) < 3;
+          return;
+        }
+      }
+    }
+
+    function writePacket(p, center, color, alpha, scale, now) {
+      var base = p.seed * PTS;
+      for (var r = 0; r < PTS; r++) {
+        var i3 = (base + r) * 3;
+        if (p.phase === 2) {
+          tmpP.copy(p.off[r]);                      // dissolve: offsets already integrated
+        } else {
+          tmpP.copy(p.off[r]).multiplyScalar(scale);
+          var w = now * 3.2 + r;
+          tmpP.x += Math.sin(w) * 0.035;
+          tmpP.y += Math.cos(w * 1.3) * 0.035;
+        }
+        pPos[i3]     = center.x + tmpP.x;
+        pPos[i3 + 1] = center.y + tmpP.y;
+        pPos[i3 + 2] = center.z + tmpP.z;
+        pCol[i3]     = ((color >> 16) & 255) / 255;
+        pCol[i3 + 1] = ((color >> 8) & 255) / 255;
+        pCol[i3 + 2] = (color & 255) / 255;
+        pAlp[base + r] = alpha * 0.42;   // additive: overlapping dots build the hot core, so keep each low
+        pSiz[base + r] = 10.0;
+      }
+    }
+    function hidePacket(p) {
+      var base = p.seed * PTS;
+      for (var r = 0; r < PTS; r++) { pAlp[base + r] = 0; }
+    }
+
+    var TRAVEL_IN = 3.60, TRAVEL_OUT = 2.20, DISSOLVE = 2.10;
+    var raf = null, t0 = 0, lastSpawn = -99, spawnIdx = 0, prev = 0;
+    // every control-plane link, both directions where the traffic really is bidirectional.
+    // duration comes from link length so all bulges travel at the same speed.
+    var AMB = [
+      { t: 0.4, a: "crd",        b: "controller" },
+      { t: 1.4, a: "controller", b: "enforcer"   },
+      { t: 2.3, a: "scanner",    b: "controller" },
+      { t: 3.6, a: "updater",    b: "scanner"    },
+      { t: 4.4, a: "manager",    b: "controller" },
+      { t: 6.0, a: "controller", b: "scanner"    },
+      { t: 7.2, a: "controller", b: "enforcer"   },
+      { t: 8.0, a: "controller", b: "manager"    }
+    ];
+    var AMB_SPEED = 7.0;   // world units per second
+    var AMB_LOOP = 9.0, ambCycle = -1, ambFired = [];
+    var proj = new THREE.Vector3();
+
+    function frame(ms) {
+      raf = requestAnimationFrame(frame);
+      if (!t0) { t0 = ms; prev = 0; }
+      var now = (ms - t0) / 1000;
+      var dt = Math.min(0.05, Math.max(0, now - prev));
+      prev = now;
+
+      // --- launch traffic ---
+      if (now - lastSpawn > 1.15) { lastSpawn = now; launch(now, spawnIdx++); }
+
+      // --- ambient control-plane traffic ---
+      var ac = Math.floor(now / AMB_LOOP);
+      if (ac !== ambCycle) { ambCycle = ac; ambFired = []; }
+      var alocal = now - ac * AMB_LOOP;
+      for (var c = 0; c < AMB.length; c++) {
+        if (!ambFired[c] && alocal >= AMB[c].t) {
+          ambFired[c] = true;
+          var pa = byId[AMB[c].a].group.position, pb = byId[AMB[c].b].group.position;
+          spawnPulse(pa, pb, pa.distanceTo(pb) / AMB_SPEED, C.link, now);
+        }
+      }
+
+      world.rotation.y = Math.sin(now * 0.17) * 0.10;
+      world.rotation.x = Math.sin(now * 0.11) * 0.04;
+
+      // --- packets ---
+      for (var k = 0; k < packets.length; k++) {
+        var p = packets[k];
+        if (!p.active) { continue; }
+        var age = now - p.t0;
+
+        if (p.phase === 0) {                                  // ingress -> gate
+          var u = age / TRAVEL_IN;
+          if (u >= 1) {
+            if (p.blocked) {
+              p.phase = 2; p.t0 = now;
+              gateFlash = now; gateFlashColor = C.red; shockT = now;
+              byId.enforcer.flash = now; byId.enforcer.flashColor = C.red;
+              verdict.classList.add("on");
+              verdict.dataset.until = String(now + 2.4);
+              for (var v = 0; v < PTS; v++) {
+                // backsplash off the gate face: -x bias so a blocked request visibly
+                // fails to continue toward the workload, plus radial spread in y/z
+                p.off[v].normalize().multiplyScalar(0.2);
+                p.vel[v].set(-(0.95 + Math.abs(p.off[v].x) * 3.4),
+                             p.off[v].y * 7.5 + 0.55, p.off[v].z * 7.5);
+              }
+            } else {
+              p.phase = 1; p.t0 = now;
+              gateFlash = now; gateFlashColor = C.green;
+            }
+            continue;
+          }
+          if (!p.hitIn && u >= IN_FRAC) { p.hitIn = true; byId.ingress.flash = now; byId.ingress.flashColor = C.ink; }
+          tmp.copy(ENTRY).lerp(GATE, u);
+          writePacket(p, tmp, p.blocked ? C.red : C.green, 0.95, 1, now);
+
+        } else if (p.phase === 1) {                           // gate -> workload, then absorbed
+          var u2 = age / TRAVEL_OUT;
+          if (u2 >= 1) { p.active = false; hidePacket(p); continue; }
+          tmp.copy(GATE).lerp(OUT, u2);
+          writePacket(p, tmp, C.green, 0.95 * (1 - Math.max(0, (u2 - 0.75) / 0.25)), 1, now);
+
+        } else {                                              // dissolve
+          var u3 = age / DISSOLVE;
+          if (u3 >= 1) { p.active = false; hidePacket(p); continue; }
+          for (var w2 = 0; w2 < PTS; w2++) {
+            p.vel[w2].multiplyScalar(0.977);
+            p.vel[w2].y -= 2.30 * dt;
+            p.off[w2].addScaledVector(p.vel[w2], dt);
+          }
+          writePacket(p, GATE, C.red, 0.95 * (1 - u3) * (1 - u3), 1, now);
+        }
+      }
+      geo.attributes.position.needsUpdate = true;
+      geo.attributes.aColor.needsUpdate = true;
+      geo.attributes.aAlpha.needsUpdate = true;
+      geo.attributes.aSize.needsUpdate = true;
+
+      if (verdict.dataset.until && now > parseFloat(verdict.dataset.until)) {
+        verdict.classList.remove("on");
+        verdict.dataset.until = "";
+      }
+
+      // --- control-plane pulses ---
+      for (var pp = 0; pp < pool.length; pp++) {
+        var qq = pool[pp];
+        if (!qq.active) { continue; }
+        var uq = (now - qq.t0) / qq.dur;
+        if (uq >= 1) { qq.active = false; qq.mesh.visible = false; continue; }
+        qq.mesh.position.lerpVectors(qq.from, qq.to, uq);
+        qq.mesh.material.opacity = Math.sin(Math.PI * uq);
+      }
+
+      // --- shockwave ---
+      var sAge = now - shockT;
+      if (sAge >= 0 && sAge < SHOCK) {
+        var su = sAge / SHOCK;
+        var ss = 1 + su * 5.0;
+        shock.scale.set(ss, ss, 1);
+        shock.material.opacity = (1 - su) * (1 - su) * 0.95;
+      } else {
+        shock.material.opacity = 0;
+      }
+
+      // --- gate flash ---
+      var gAge = now - gateFlash;
+      var gLit = gAge >= 0 && gAge < 0.95 ? 1 - gAge / 0.95 : 0;
+      gatePlane.material.opacity = gLit * 0.46;
+      gatePlane.material.color.setHex(gateFlashColor);
+      gateFrame.material.color.setHex(gLit > 0 ? gateFlashColor : C.green);
+      gateFrame.material.opacity = 0.5 + gLit * 0.45;
+
+      world.updateMatrixWorld(true);   // must precede the label projection below
+
+      NODES.forEach(function (n) {
+        var o = byId[n.id];
+        var lAge = now - o.flash;
+        var lit = lAge >= 0 && lAge < 0.9 ? 1 - lAge / 0.9 : 0;
+        var fg = n.flashGain === undefined ? 1 : n.flashGain;
+        o.halo.material.opacity = lit * 0.75 * fg;
+        o.halo.material.color.setHex(lit > 0 ? o.flashColor : n.color);
+        var hs = 1 + lit * 0.35 * fg;
+        o.halo.scale.set(hs, hs, hs);
+        o.core.material.opacity = 0.16 + lit * 0.5 * fg;
+        o.core.material.color.setHex(lit > 0 ? o.flashColor : n.color);
+        if (n.cloud) {
+          o.group.rotation.y = Math.sin(now * 0.22) * 0.18;
+          o.group.position.y = n.pos[1] + Math.sin(now * 0.5) * 0.06;
+        } else {
+          o.group.rotation.y = now * 0.30 + n.pos[0];
+          o.group.rotation.x = now * 0.16;
+        }
+
+        var dy = n.up ? (n.size + 0.75) : -(n.size + 0.75);
+        proj.set(n.pos[0], n.pos[1] + dy, n.pos[2]).applyMatrix4(world.matrixWorld).project(camera);
+        o.chip.style.left = ((proj.x * 0.5 + 0.5) * W) + "px";
+        o.chip.style.top = ((-proj.y * 0.5 + 0.5) * H) + "px";
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    return {
+      start: function () {
+        if (raf === null) {
+          t0 = 0; lastSpawn = -99; spawnIdx = 0; ambCycle = -1; ambFired = [];
+          for (var k = 0; k < packets.length; k++) {
+            packets[k].active = false; resetPacket(packets[k]); hidePacket(packets[k]);
+          }
+          raf = requestAnimationFrame(frame);
+        }
+      },
+      stop: function () {
+        if (raf !== null) {
+          cancelAnimationFrame(raf); raf = null;
+          verdict.classList.remove("on"); verdict.dataset.until = "";
+        }
+      }
+    };
+  })();
+
+  document.addEventListener("impress:stepleave", function (e) {
+    if (e.target.id === "arch") { arch.stop(); }
+  });
+
   document.addEventListener("impress:stepenter", function (e) {
     var step = e.target;
     if (step.id === "fromhere") { startClock(); }
+    if (step.id === "arch") { arch.start(); }
     if (step.id === "overview" || step.id === "ground" || step.id === "door") { finishAll(); return; }
     if (played[step.id]) { return; }
     played[step.id] = true;
@@ -731,6 +1265,36 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     drawBars(step, true);
   });
 
+  // ---- touch navigation ----
+  // A tap in a side zone steps the deck. impress.js's swipe plugin listens on document and
+  // treats a movement-free touchend as "snap back to the current step", which would fight
+  // the step change -- so a recognised tap is stopped before it reaches document. Anything
+  // that actually moved is left alone so swiping still works from inside the zones.
+  (function () {
+    var TAP_SLOP = 12;   // px of finger travel still counted as a tap, not a swipe
+    ["tap-prev", "tap-next"].forEach(function (id) {
+      var zone = document.getElementById(id);
+      if (!zone) { return; }
+      var step = id === "tap-prev" ? function () { api.prev(); } : function () { api.next(); };
+      var sx = 0, sy = 0, moved = false;
+      zone.addEventListener("touchstart", function (e) {
+        var t = e.changedTouches[0];
+        sx = t.clientX; sy = t.clientY; moved = false;
+      }, { passive: true });
+      zone.addEventListener("touchmove", function (e) {
+        var t = e.changedTouches[0];
+        if (Math.abs(t.clientX - sx) > TAP_SLOP || Math.abs(t.clientY - sy) > TAP_SLOP) { moved = true; }
+      }, { passive: true });
+      zone.addEventListener("touchend", function (e) {
+        if (moved) { return; }
+        e.preventDefault();     // also suppresses the synthetic click that would follow
+        e.stopPropagation();    // keeps impress's swipe plugin from snapping back
+        step();
+      });
+      zone.addEventListener("click", function (e) { e.preventDefault(); step(); });
+    });
+  })();
+
   function toPoster() { api.goto(document.getElementById("overview"), 900); }
   document.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.altKey || e.metaKey || e.shiftKey) { return; }
@@ -740,7 +1304,8 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 </script>
 <!-- DECK-END -->
 <!-- Validation: key messages [3: stakes are existential · current defenses miss the unknown · behaviour enforcement covers it without slowing you] ·
-     panels [8 poster + door stop + 1 hidden encore] · detail views [1: encore beneath the doors] ·
+     panels [8 poster + door stop + 2 hidden: architecture (rotate-y 90) + encore (rotate-x -90)] ·
+     detail views [2: architecture off the hub, encore beneath the doors] ·
      steps over 30 words [3: stakes, misses, companion — self-guided leave-behind register] ·
      fonts [3: SUSE, Montserrat, Fira Code — local woff2] · main colors [navy/panel/ink] + accent [SUSE green; fixed series cyan/amber/violet/red] ·
      unsourced numbers [0 — IBM 2025, Rapid7, Edgescan 2025, VulnCheck 1H2025 printed inline; healthcare story is Rick's firsthand account, spoken] ·
