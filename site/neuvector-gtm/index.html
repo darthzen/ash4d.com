@@ -157,25 +157,19 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 .stage-arrow img { width: 20px; height: 20px; }
 
 /* ---------- architecture panel (three.js) ---------- */
+/* flex column so the stage's auto margins absorb the free space evenly and the
+   diagram sits centred between the kicker and the legend */
 #arch .card { border: 1.5px solid var(--cyan); border-radius: 20px;
-  box-shadow: 0 14px 28px -12px rgba(0,0,0,0.25), 0 16px 32px rgba(0,150,226,0.08); }
-#arch .kicker { color: var(--cyan); text-align: center; margin-bottom: 4px; }
-.arch-h { font-family: var(--f-disp); font-weight: 800; font-size: 22px; color: var(--ink);
-  text-align: center; margin: 0 0 10px; }
-.arch-stage { position: relative; width: 1256px; height: 410px; margin: 0 auto; }
+  box-shadow: 0 14px 28px -12px rgba(0,0,0,0.25), 0 16px 32px rgba(0,150,226,0.08);
+  display: flex; flex-direction: column; }
+#arch .kicker { color: var(--ink); text-align: center; margin-bottom: 4px; }
+.arch-stage { position: relative; width: 1256px; height: 410px; margin: auto; flex: none; }
 #arch-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .arch-labels { position: absolute; inset: 0; pointer-events: none; }
 .nvchip { position: absolute; transform: translate(-50%, -50%); white-space: nowrap;
   font-family: var(--f-disp); font-weight: 800; font-size: 11px; letter-spacing: .07em;
   text-transform: uppercase; padding: 4px 9px; border-radius: 8px;
   background: rgba(6,19,45,0.86); border: 1px solid; }
-.arch-verdict { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
-  font-family: var(--f-disp); font-weight: 800; font-size: 15px; color: var(--red);
-  background: rgba(6,19,45,0.94); border: 1px solid var(--red); border-radius: 999px;
-  padding: 7px 18px; margin: 0; white-space: nowrap;
-  box-shadow: 0 8px 20px rgba(209,59,79,0.18);
-  opacity: 0; transition: opacity .4s ease; }
-.arch-verdict.on { opacity: 1; }
 .arch-legend { display: flex; gap: 14px; margin-top: 10px; }
 .svc { flex: 1; min-width: 0; background: var(--navy); border: 1px solid var(--line);
   border-top-width: 2px; border-radius: 12px; padding: 10px 12px; }
@@ -525,11 +519,9 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     <div class="card">
       <div class="corner-glow tr"></div><div class="corner-glow bl"></div>
       <p class="kicker">// Under the Hood</p>
-      <p class="arch-h">Five services, one question: is this normal?</p>
       <div class="arch-stage">
         <canvas id="arch-canvas"></canvas>
         <div class="arch-labels" id="arch-labels"></div>
-        <p class="arch-verdict" id="arch-verdict">Blocked at the Enforcer &mdash; it never reached your workload</p>
       </div>
       <div class="arch-legend">
         <div class="svc enforcer rv d1">
@@ -819,7 +811,6 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
     var noop = { start: function () {}, stop: function () {} };
     var canvas = document.getElementById("arch-canvas");
     var labelHost = document.getElementById("arch-labels");
-    var verdict = document.getElementById("arch-verdict");
     if (!canvas || !window.THREE) { return noop; }
 
     var W = 1256, H = 410;
@@ -861,9 +852,16 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
 
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 100);
-    camera.position.set(0, 0.3, 14);
+    // 14.8 rather than 14: the lane spans internet(-13.6) to updater(+13.0), and the world's
+    // ±0.10 rad yaw swings whichever end is nearest the camera outward. At z=14 the Internet
+    // cloud reached NDC -1.074 at the extreme -- clipped off the left edge. Backing off gives
+    // margin at both ends; see world.position.x below for the matching shift.
+    camera.position.set(0, 0.3, 14.8);
     camera.lookAt(0, 0, 0);
     var world = new THREE.Group();
+    // the scene's mass sits left of centre (four lane nodes vs three control-plane ones on
+    // the right), so shift right to even the margins and keep the Internet cloud in frame
+    world.position.x = 1.3;
     scene.add(world);
 
     var byId = {};
@@ -1122,8 +1120,6 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
               p.phase = 2; p.t0 = now;
               gateFlash = now; gateFlashColor = C.red; shockT = now;
               byId.enforcer.flash = now; byId.enforcer.flashColor = C.red;
-              verdict.classList.add("on");
-              verdict.dataset.until = String(now + 2.4);
               for (var v = 0; v < PTS; v++) {
                 // backsplash off the gate face: -x bias so a blocked request visibly
                 // fails to continue toward the workload, plus radial spread in y/z
@@ -1163,10 +1159,6 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
       geo.attributes.aAlpha.needsUpdate = true;
       geo.attributes.aSize.needsUpdate = true;
 
-      if (verdict.dataset.until && now > parseFloat(verdict.dataset.until)) {
-        verdict.classList.remove("on");
-        verdict.dataset.until = "";
-      }
 
       // --- control-plane pulses ---
       for (var pp = 0; pp < pool.length; pp++) {
@@ -1240,7 +1232,6 @@ html, body { margin: 0; padding: 0; background: #040d20; color: var(--ink);
       stop: function () {
         if (raf !== null) {
           cancelAnimationFrame(raf); raf = null;
-          verdict.classList.remove("on"); verdict.dataset.until = "";
         }
       }
     };
