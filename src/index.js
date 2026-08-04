@@ -35,9 +35,25 @@ export default {
 		// record the analytics hit against the shared path and lose the
 		// attribution entirely — the redirect target is what gets counted. Serve
 		// the asset's bytes under the token URL instead.
-		if (TRACKING_PATHS.has(url.pathname)) {
-			url.pathname = TRACKING_PATHS.get(url.pathname);
-			return env.ASSETS.fetch(new Request(url, request));
+		//
+		// A page that loads its own assets by relative path (the NeuVector deck
+		// does — assets/, fonts/, vendor/) then asks for them *below* the token
+		// URL: /for/<token>/assets/crate.png. Those have to reach the deck's
+		// directory or the page renders bare, so the token doubles as a stand-in
+		// for that directory. Only for decks that live in one: a single-file page
+		// maps to no directory, and its token stays an exact match so the token
+		// URL can never be used to walk the site root.
+		for (const [token, asset] of TRACKING_PATHS) {
+			if (url.pathname === token) {
+				url.pathname = asset;
+				return env.ASSETS.fetch(new Request(url, request));
+			}
+
+			const dir = asset.slice(0, asset.lastIndexOf("/"));
+			if (dir && url.pathname.startsWith(`${token}/`)) {
+				url.pathname = dir + url.pathname.slice(token.length);
+				return env.ASSETS.fetch(new Request(url, request));
+			}
 		}
 
 		return env.ASSETS.fetch(request);
