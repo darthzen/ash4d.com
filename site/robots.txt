@@ -1,10 +1,21 @@
 # Only the home page is meant to appear in search results. Everything else here
 # is a demo, a working artifact, or a document handed out by direct link.
 #
-# "Allow: /$" anchors to the root exactly — the $ terminator is honoured by
-# Google, Bing and Yandex. A crawler that does not understand $ falls through to
-# "Disallow: /" and indexes nothing, which is the safe direction to fail in.
+# NOTE: Cloudflare prepends a managed block to this file that includes its own
+# "User-agent: *" group ending in "Allow: /". Crawlers merge groups that share a
+# user-agent token, so a blanket "Disallow: /" here would tie with that "Allow: /"
+# on path length — and on a tie the least restrictive rule wins. It would be
+# silently ignored.
+#
+# So each path is disallowed explicitly. A longer path pattern beats the managed
+# "Allow: /" outright, which holds whether or not the managed block is present.
+# Add a line here whenever a page is added to site/.
+#
+# style.css and /img/ stay crawlable so the home page renders correctly for
+# indexers that fetch subresources.
 
 User-agent: *
-Allow: /$
-Disallow: /
+Disallow: /agent-mcp.html
+Disallow: /fossa-mcp.html
+Disallow: /neuvector-gtm/
+Disallow: /resume.pdf
