@@ -1,0 +1,10 @@
+# Only the home page is meant to appear in search results. Everything else here
+# is a demo, a working artifact, or a document handed out by direct link.
+#
+# "Allow: /$" anchors to the root exactly — the $ terminator is honoured by
+# Google, Bing and Yandex. A crawler that does not understand $ falls through to
+# "Disallow: /" and indexes nothing, which is the safe direction to fail in.
+
+User-agent: *
+Allow: /$
+Disallow: /
