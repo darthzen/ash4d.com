@@ -345,51 +345,36 @@ h2 {
 .philosophy {
   background: var(--green);
   display: flex;
-  align-items: center;
-  gap: 80px;
-}
-.pop-col {
-  width: 400px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-.pop-frame {
-  width: 340px;
-  height: 440px;
-  border: 12px solid var(--gold);
-  border-radius: 8px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.13);
-}
-.pop-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.pop-caption { text-align: center; }
-.pop-name { font-family: var(--font-display); font-weight: 900; font-size: 24px; color: #ffffff; }
-.pop-role {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 14px;
-  text-transform: uppercase;
-  color: var(--gold);
+  justify-content: center;
 }
 .phil-col {
-  flex: 1;
+  width: 100%;
+  max-width: 1040px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  align-items: center;
+  gap: 48px;
+}
+.phil-col::before {
+  content: "";
+  width: 72px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--gold);
 }
 .philosophy blockquote {
   font-size: 40px;
   line-height: 1.2;
   color: #ffffff;
   font-weight: 400;
+  max-width: 900px;
+  text-align: center;
 }
 .principles {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+  width: 100%;
 }
 .principle {
   background: rgba(255, 255, 255, 0.04);
@@ -419,7 +404,14 @@ h2 {
   color: var(--gold);
 }
 .pr-body { font-size: 14px; line-height: 1.5; color: rgba(255, 255, 255, 0.8); }
-.phil-close { font-style: italic; font-size: 18px; line-height: 1.6; color: rgba(255, 255, 255, 0.8); }
+.phil-close {
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 820px;
+  text-align: center;
+}
 
 /* ---------- projects ---------- */
 .projects { background: var(--cream); }
@@ -500,7 +492,6 @@ h2 {
   .timeline::before { display: none; }
   .tl-item { flex: 1 1 25%; min-width: 160px; }
   .expertise-grid { grid-template-columns: repeat(2, 1fr); }
-  .philosophy { flex-direction: column; }
   .philosophy blockquote { font-size: 32px; }
   .projects-grid { grid-template-columns: 1fr; }
   h2 { font-size: 40px; }
@@ -517,7 +508,6 @@ h2 {
   .rev-val { width: 100%; }
   .expertise-grid { grid-template-columns: 1fr; }
   .principles { grid-template-columns: 1fr; }
-  .pop-frame { width: 100%; max-width: 340px; }
   .footer { flex-direction: column; }
   .ft-nav { flex-wrap: wrap; gap: 24px; justify-content: center; }
   h2 { font-size: 32px; }
